@@ -1,0 +1,24 @@
+{
+  "entities": {
+    "Battle": {
+      "title": "Battle",
+      "description": "An A/B test instance for thumbnails",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 200 },
+        "thumbA": { "type": "string", "description": "Base64 encoded image A" },
+        "thumbB": { "type": "string", "description": "Base64 encoded image B" },
+        "votesA": { "type": "number", "description": "Votes for option A" },
+        "votesB": { "type": "number", "description": "Votes for option B" },
+        "createdAt": { "type": "string", "description": "ISO date string" }
+      },
+      "required": ["title", "thumbA", "thumbB", "votesA", "votesB", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/battles/{battleId}": {
+      "schema": { "$ref": "#/entities/Battle" },
+      "description": "Stores thumbnail A/B testing battles"
+    }
+  }
+}

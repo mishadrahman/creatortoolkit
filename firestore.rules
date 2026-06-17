@@ -1,0 +1,45 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+
+    function isValidBattle(data) {
+      return data.keys().hasAll(['title', 'thumbA', 'thumbB', 'votesA', 'votesB', 'createdAt'])
+        && data.title is string && data.title.size() <= 200
+        && data.thumbA is string && data.thumbA.size() <= 1000000 
+        && data.thumbB is string && data.thumbB.size() <= 1000000
+        && data.votesA is number
+        && data.votesB is number
+        && data.createdAt is string && data.createdAt.size() <= 50;
+    }
+
+    match /battles/{battleId} {
+      allow get: if isValidId(battleId);
+      
+      allow create: if isValidId(battleId) 
+        && isValidBattle(incoming()) 
+        && incoming().votesA == 0 
+        && incoming().votesB == 0;
+        
+      allow update: if isValidId(battleId) 
+        && isValidBattle(incoming())
+        && (
+          (incoming().diff(existing()).affectedKeys().hasOnly(['votesA']) && incoming().votesA == existing().votesA + 1) ||
+          (incoming().diff(existing()).affectedKeys().hasOnly(['votesB']) && incoming().votesB == existing().votesB + 1)
+        )
+        && incoming().title == existing().title
+        && incoming().thumbA == existing().thumbA
+        && incoming().thumbB == existing().thumbB
+        && incoming().createdAt == existing().createdAt;
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Creator Toolkit",
+  "description": "An all-in-one suite of free growth tools for YouTube creators, including SEO optimization and thumbnail battles.",
+  "requestFramePermissions": ["clipboard-read", "clipboard-write"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
