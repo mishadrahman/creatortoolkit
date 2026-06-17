@@ -14,9 +14,9 @@ service cloud.firestore {
 
     function isValidBattle(data) {
       return data.keys().hasAll(['title', 'thumbA', 'thumbB', 'votesA', 'votesB', 'createdAt'])
-        && data.title is string && data.title.size() <= 200
-        && data.thumbA is string && data.thumbA.size() <= 1000000 
-        && data.thumbB is string && data.thumbB.size() <= 1000000
+        && data.title is string && data.title.size() <= 300
+        && data.thumbA is string && data.thumbA.size() <= 2000000 
+        && data.thumbB is string && data.thumbB.size() <= 2000000
         && data.votesA is number
         && data.votesB is number
         && data.createdAt is string && data.createdAt.size() <= 50;
