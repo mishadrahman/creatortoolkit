@@ -13,17 +13,22 @@ service cloud.firestore {
     function existing() { return resource.data; }
 
     function isValidBattle(data) {
-      return data.keys().hasAll(['title', 'thumbA', 'thumbB', 'votesA', 'votesB', 'createdAt'])
+      let isBaseValid = data.keys().hasAll(['title', 'thumbA', 'thumbB', 'votesA', 'votesB', 'createdAt'])
         && data.title is string && data.title.size() <= 300
         && data.thumbA is string && data.thumbA.size() <= 2000000 
         && data.thumbB is string && data.thumbB.size() <= 2000000
         && data.votesA is number
         && data.votesB is number
         && data.createdAt is string && data.createdAt.size() <= 50;
+      
+      let validUser = !data.keys().hasAny(['userId']) || (data.userId is string && data.userId.size() <= 128);
+      
+      return isBaseValid && validUser;
     }
 
     match /battles/{battleId} {
       allow get: if isValidId(battleId);
+      allow list: if request.auth != null && resource.data.userId == request.auth.uid;
       
       allow create: if isValidId(battleId) 
         && isValidBattle(incoming()) 
@@ -39,7 +44,8 @@ service cloud.firestore {
         && incoming().title == existing().title
         && incoming().thumbA == existing().thumbA
         && incoming().thumbB == existing().thumbB
-        && incoming().createdAt == existing().createdAt;
+        && incoming().createdAt == existing().createdAt
+        && incoming().get('userId', '') == existing().get('userId', '');
     }
   }
 }

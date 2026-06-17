@@ -1,15 +1,20 @@
 import React from "react";
 import { Link, Outlet, useLocation } from "react-router-dom";
-import { Search, Youtube, Menu, Settings, X, LogIn, Moon, Sun } from "lucide-react";
+import { Search, Youtube, Menu, Settings, X, LogIn, LogOut, Activity } from "lucide-react";
 import { Button } from "./ui";
+import { useAuth } from "../lib/AuthContext";
+import { motion, AnimatePresence } from "motion/react";
 
 export default function ToolbarLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const [profileMenuOpen, setProfileMenuOpen] = React.useState(false);
   const location = useLocation();
+  const { user, signIn, logOut } = useAuth();
 
   // Reset menu on route change
   React.useEffect(() => {
     setMobileMenuOpen(false);
+    setProfileMenuOpen(false);
   }, [location.pathname]);
 
   const navLinks = [
@@ -60,26 +65,105 @@ export default function ToolbarLayout() {
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
             
-            <div className="hidden md:flex w-9 h-9 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 border-2 border-slate-800 shrink-0"></div>
+            {user ? (
+              <div className="hidden md:flex items-center gap-4">
+                <Link to="/my-battles">
+                  <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
+                    <Activity className="h-4 w-4 mr-2" />
+                    My Battles
+                  </Button>
+                </Link>
+                <div className="relative">
+                  <div 
+                    className="w-9 h-9 rounded-full bg-slate-800 border-2 border-slate-700 shrink-0 overflow-hidden cursor-pointer hover:border-slate-500 transition-colors"
+                    onClick={() => setProfileMenuOpen(!profileMenuOpen)}
+                    title="Profile Menu"
+                  >
+                    {user.photoURL && <img src={user.photoURL} alt="Profile" className="w-full h-full object-cover" />}
+                  </div>
+                  
+                  {/* Dropdown Menu */}
+                  <AnimatePresence>
+                    {profileMenuOpen && (
+                      <motion.div 
+                        initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                        transition={{ duration: 0.15, ease: "easeOut" }}
+                        className="absolute right-0 mt-3 w-48 bg-slate-900 border border-slate-800 rounded-xl shadow-2xl py-2 z-50 origin-top-right"
+                      >
+                        <div className="px-4 py-2 border-b border-slate-800 mb-2">
+                           <p className="text-sm font-medium text-white truncate">{user.displayName || "User"}</p>
+                           <p className="text-xs text-slate-400 truncate">{user.email || ""}</p>
+                        </div>
+                        <button 
+                          onClick={() => {
+                            setProfileMenuOpen(false);
+                            logOut();
+                          }}
+                          className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-slate-800 transition-colors flex items-center gap-2"
+                        >
+                          <LogOut className="h-4 w-4" />
+                          Logout
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </div>
+            ) : (
+              <Button variant="outline" size="sm" onClick={signIn} className="hidden md:flex bg-slate-900 border-slate-700 hover:bg-slate-800 text-slate-200">
+                <LogIn className="h-4 w-4 mr-2" />
+                Login
+              </Button>
+            )}
           </div>
         </div>
 
         {/* Mobile Nav */}
-        {mobileMenuOpen && (
-          <div className="md:hidden border-t border-slate-800 bg-slate-900 px-4 py-4 space-y-4">
-            <nav className="flex flex-col gap-4 text-sm font-medium text-slate-400">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  to={link.href}
-                  className={location.pathname === link.href ? "text-white" : "hover:text-white"}
-                >
-                  {link.name}
-                </Link>
-              ))}
-            </nav>
-          </div>
-        )}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="md:hidden border-t border-slate-800 bg-slate-900 px-4 space-y-4 overflow-hidden"
+            >
+              <div className="py-4">
+                <nav className="flex flex-col gap-4 text-sm font-medium text-slate-400">
+                  {navLinks.map((link) => (
+                    <Link
+                      key={link.name}
+                      to={link.href}
+                      className={location.pathname === link.href ? "text-white" : "hover:text-white"}
+                    >
+                      {link.name}
+                    </Link>
+                  ))}
+                  {user && (
+                    <Link to="/my-battles" className={location.pathname === "/my-battles" ? "text-white" : "hover:text-white"}>
+                      My Battles
+                    </Link>
+                  )}
+                </nav>
+                <div className="pt-4 border-t border-slate-800 mt-4">
+                  {user ? (
+                    <Button variant="outline" className="w-full justify-start text-slate-300 border-slate-700 bg-slate-800" onClick={logOut}>
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Logout ({user.displayName || 'User'})
+                    </Button>
+                  ) : (
+                    <Button variant="default" className="w-full justify-start bg-red-600 hover:bg-red-700 text-white border-0" onClick={signIn}>
+                      <LogIn className="h-4 w-4 mr-2" />
+                      Login
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* Main Content */}

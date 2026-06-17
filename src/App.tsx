@@ -17,17 +17,21 @@ import HashtagGenerator from "./pages/HashtagGenerator";
 import DescriptionGenerator from "./pages/DescriptionGenerator";
 import ChannelNameGenerator from "./pages/ChannelNameGenerator";
 import TagExtractor from "./pages/TagExtractor";
+import MyBattles from "./pages/MyBattles";
+import { AuthProvider } from "./lib/AuthContext";
 
 export default function App() {
   return (
-    <HashRouter>
-      <Routes>
-        <Route path="/" element={<ToolbarLayout />}>
-          <Route index element={<Home />} />
-          <Route path="thumbnail-downloader" element={<ThumbnailDownloader />} />
-          <Route path="thumbnail-preview" element={<ThumbnailPreview />} />
-          <Route path="thumbnail-battle" element={<ThumbnailBattle />} />
-          <Route path="battle/:id" element={<BattleView />} />
+    <AuthProvider>
+      <HashRouter>
+        <Routes>
+          <Route path="/" element={<ToolbarLayout />}>
+            <Route index element={<Home />} />
+            <Route path="thumbnail-downloader" element={<ThumbnailDownloader />} />
+            <Route path="thumbnail-preview" element={<ThumbnailPreview />} />
+            <Route path="thumbnail-battle" element={<ThumbnailBattle />} />
+            <Route path="my-battles" element={<MyBattles />} />
+            <Route path="battle/:id" element={<BattleView />} />
           <Route path="title-generator" element={<TitleGenerator />} />
           <Route path="hashtag-generator" element={<HashtagGenerator />} />
           <Route path="description-generator" element={<DescriptionGenerator />} />
@@ -36,5 +40,6 @@ export default function App() {
         </Route>
       </Routes>
     </HashRouter>
+    </AuthProvider>
   );
 }

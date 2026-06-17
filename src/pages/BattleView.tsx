@@ -3,12 +3,15 @@ import { useParams } from "react-router-dom";
 import { doc, getDoc, updateDoc, increment } from "firebase/firestore";
 import { db, handleFirestoreError, OperationType } from "../lib/firebase";
 import { Button } from "../components/ui";
+import { getTelegramFileUrl } from "../lib/telegram";
 
 export default function BattleView() {
   const { id } = useParams<{ id: string }>();
   const [battle, setBattle] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [votedFor, setVotedFor] = useState<"A" | "B" | null>(null);
+  const [urlA, setUrlA] = useState<string | null>(null);
+  const [urlB, setUrlB] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchBattle = async () => {
@@ -17,7 +20,25 @@ export default function BattleView() {
         const docRef = doc(db, "battles", id);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          setBattle({ id: docSnap.id, ...docSnap.data() });
+          const data = docSnap.data();
+          setBattle({ id: docSnap.id, ...data });
+          
+          // Resolve Telegram URLs dynamically so they don't expire
+          try {
+             const resolvedA = await getTelegramFileUrl(data.thumbA);
+             setUrlA(resolvedA);
+          } catch (e) {
+             console.error("Failed resolving A URL", e);
+             setUrlA(data.thumbA); // Fallback
+          }
+          try {
+             const resolvedB = await getTelegramFileUrl(data.thumbB);
+             setUrlB(resolvedB);
+          } catch (e) {
+             console.error("Failed resolving B URL", e);
+             setUrlB(data.thumbB); // Fallback
+          }
+
         }
       } catch (e) {
         console.error(e);
@@ -77,14 +98,14 @@ export default function BattleView() {
         {/* Option A */}
         <div className="space-y-6">
            <div 
-             className={`aspect-video rounded-xl overflow-hidden cursor-pointer transition-all border-4 ${votedFor === 'A' ? 'border-green-500 shadow-xl shadow-green-500/20' : 'border-transparent hover:scale-[1.02]'}`}
+             className={`aspect-video rounded-xl overflow-hidden cursor-pointer bg-black/5 dark:bg-white/5 transition-all border-4 ${votedFor === 'A' ? 'border-green-500 shadow-xl shadow-green-500/20' : 'border-transparent hover:scale-[1.02]'}`}
              onClick={() => handleVote('A')}
            >
-              <img src={battle.thumbA} alt="Option A" className="w-full h-full object-cover" />
+              {urlA ? <img src={urlA} alt="Option A" className="w-full h-full object-contain" /> : <div className="w-full h-full bg-gray-100 dark:bg-gray-800 animate-pulse" />}
            </div>
            
            {!votedFor ? (
-              <Button className="w-full" size="lg" onClick={() => handleVote('A')}>Vote for A</Button>
+              <Button className="w-full" size="lg" onClick={() => handleVote('A')} disabled={!urlA}>Vote for A</Button>
            ) : (
               <div className="space-y-2">
                  <div className="flex justify-between font-semibold">
@@ -102,14 +123,14 @@ export default function BattleView() {
         {/* Option B */}
         <div className="space-y-6">
            <div 
-             className={`aspect-video rounded-xl overflow-hidden cursor-pointer transition-all border-4 ${votedFor === 'B' ? 'border-green-500 shadow-xl shadow-green-500/20' : 'border-transparent hover:scale-[1.02]'}`}
+             className={`aspect-video rounded-xl overflow-hidden cursor-pointer bg-black/5 dark:bg-white/5 transition-all border-4 ${votedFor === 'B' ? 'border-green-500 shadow-xl shadow-green-500/20' : 'border-transparent hover:scale-[1.02]'}`}
              onClick={() => handleVote('B')}
            >
-              <img src={battle.thumbB} alt="Option B" className="w-full h-full object-cover" />
+              {urlB ? <img src={urlB} alt="Option B" className="w-full h-full object-contain" /> : <div className="w-full h-full bg-gray-100 dark:bg-gray-800 animate-pulse" />}
            </div>
            
            {!votedFor ? (
-              <Button className="w-full" size="lg" onClick={() => handleVote('B')}>Vote for B</Button>
+              <Button className="w-full" size="lg" onClick={() => handleVote('B')} disabled={!urlB}>Vote for B</Button>
            ) : (
               <div className="space-y-2">
                  <div className="flex justify-between font-semibold">
