@@ -25,8 +25,8 @@ jobs:
       - name: Build Application
         run: npm run build
 
-      # Add your specific deployment commands below
-      # Example: 
-      # - name: Deploy to Server
-      #   run: |
-      #     echo "Deploying..."
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
