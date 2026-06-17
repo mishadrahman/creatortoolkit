@@ -1,11 +1,24 @@
 import React, { useState } from "react";
-import { Copy, Check, Upload, BarChart, ArrowRight, LogIn } from "lucide-react";
+import { Copy, Check, Upload, ArrowRight, LogIn } from "lucide-react";
 import { Button, Input, Card, CardContent } from "../components/ui";
 import { db, handleFirestoreError, OperationType } from "../lib/firebase";
 import { collection, addDoc } from "firebase/firestore";
 import { Link } from "react-router-dom";
 import { uploadToTelegram } from "../lib/telegram";
 import { useAuth } from "../lib/AuthContext";
+import CropModal from "../components/CropModal";
+import {
+  FacebookShareButton,
+  TwitterShareButton,
+  WhatsappShareButton,
+  TelegramShareButton,
+  FacebookMessengerShareButton,
+  FacebookIcon,
+  TwitterIcon,
+  WhatsappIcon,
+  TelegramIcon,
+  FacebookMessengerIcon
+} from "react-share";
 
 export default function ThumbnailBattle() {
   const { user, signIn } = useAuth();
@@ -16,19 +29,46 @@ export default function ThumbnailBattle() {
   
   const [title, setTitle] = useState("");
   const [creating, setCreating] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [battleId, setBattleId] = useState<string | null>(null);
+
+  const [cropTarget, setCropTarget] = useState<{ side: "A" | "B", url: string } | null>(null);
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>, side: "A" | "B") => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       const previewUrl = URL.createObjectURL(file);
-      if (side === "A") {
-        setThumbAPreview(previewUrl);
-        setFileA(file);
-      } else {
-        setThumbBPreview(previewUrl);
-        setFileB(file);
-      }
+      
+      const img = new Image();
+      img.onload = () => {
+        // If image is portrait (like 9:16), ask to crop
+        if (img.height > img.width) {
+          setCropTarget({ side, url: previewUrl });
+        } else {
+          setPreviewAndFile(side, previewUrl, file);
+        }
+      };
+      img.src = previewUrl;
+    }
+    // reset input
+    e.target.value = '';
+  };
+
+  const setPreviewAndFile = (side: "A" | "B", url: string, file: File) => {
+    if (side === "A") {
+      setThumbAPreview(url);
+      setFileA(file);
+    } else {
+      setThumbBPreview(url);
+      setFileB(file);
+    }
+  };
+
+  const handleCropComplete = (croppedFile: File) => {
+    if (cropTarget) {
+      const url = URL.createObjectURL(croppedFile);
+      setPreviewAndFile(cropTarget.side, url, croppedFile);
+      setCropTarget(null);
     }
   };
 
@@ -40,20 +80,21 @@ export default function ThumbnailBattle() {
     }
 
     setCreating(true);
+    setUploadProgress(0);
     try {
-      // Helper to resize image so Telegram accepts it, only if > 5MB
-      const resizeImage = (file: File): Promise<Blob | File> => {
+      // Helper to compress image to webp if > 1MB, or just resize if too large
+      const processImage = (file: File): Promise<Blob | File> => {
         return new Promise((resolve, reject) => {
           const reader = new FileReader();
           reader.onload = (e) => {
             const img = new Image();
             img.onload = () => {
-              const MAX_DIMENSION = 2560; // Telegram photo max dimension is usually 2560 on either side, sum 10000
-              const isOversizedFile = file.size > 5 * 1024 * 1024;
+              const MAX_DIMENSION = 2560; 
+              const isOversizedFile = file.size > 1 * 1024 * 1024; // 1MB limit for compression trigger
               const isOversizedDimensions = img.width > MAX_DIMENSION || img.height > MAX_DIMENSION;
 
-              // If it's under 5MB AND dimensions are safe for Telegram, return original
-              if (!isOversizedFile && !isOversizedDimensions) {
+              // If it's under 1MB AND dimensions are safe for Telegram, return original
+              if (!isOversizedFile && !isOversizedDimensions && file.type !== "image/webp") {
                 return resolve(file);
               }
 
@@ -77,14 +118,14 @@ export default function ThumbnailBattle() {
               canvas.width = width;
               canvas.height = height;
 
-              // Draw image (this will auto-crop/fit within the new dimensions)
+              // Draw image
               ctx?.drawImage(img, 0, 0, width, height);
 
-              // Extract and compress
+              // Extract and compress as WebP
               canvas.toBlob((blob) => {
                  if (blob) resolve(blob);
                  else reject(new Error("Blob conversion failed"));
-              }, file.type === "image/png" ? "image/png" : "image/jpeg", 0.90);
+              }, "image/webp", 0.85); // Compress quality
             };
             img.onerror = reject;
             img.src = e.target?.result as string;
@@ -94,12 +135,13 @@ export default function ThumbnailBattle() {
         });
       };
 
-      const compressedA = await resizeImage(fileA);
-      const compressedB = await resizeImage(fileB);
+      const compressedA = await processImage(fileA);
+      const compressedB = await processImage(fileB);
 
-      // 1. Upload images to Telegram and get File IDs
-      const fileIdA = await uploadToTelegram(compressedA);
-      const fileIdB = await uploadToTelegram(compressedB);
+      // 1. Upload images to Telegram and get File IDs with progress
+      // We will split 100% progress between the two files
+      const fileIdA = await uploadToTelegram(compressedA, (p) => setUploadProgress(p * 0.5));
+      const fileIdB = await uploadToTelegram(compressedB, (p) => setUploadProgress(50 + (p * 0.5)));
 
       // 2. Save File IDs to Firestore
       const docRef = await addDoc(collection(db, "battles"), {
@@ -121,30 +163,52 @@ export default function ThumbnailBattle() {
       }
     } finally {
       setCreating(false);
+      setUploadProgress(0);
     }
   };
 
   if (battleId) {
     const battleUrl = `/battle/${battleId}`;
+    const shareUrl = window.location.origin + "/#" + battleUrl;
+    const shareTitle = title || "Which thumbnail is better? Vote now!";
+
     return (
       <div className="container mx-auto max-w-2xl px-4 py-24 text-center">
-         <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+         <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
             <Check className="h-8 w-8" />
          </div>
-         <h1 className="text-3xl font-bold mb-4">Battle Created!</h1>
-         <p className="text-gray-500 mb-8">Share this link with your audience to get their votes.</p>
+         <h1 className="text-3xl font-bold mb-4 text-slate-900 dark:text-white">Battle Created!</h1>
+         <p className="text-slate-500 mb-8">Share this link with your audience to get their votes.</p>
          
-         <div className="flex bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-2 rounded-lg items-center gap-2 mb-8">
-            <div className="px-4 text-gray-500 truncate flex-1 text-left select-all">
-               {window.location.origin}{battleUrl}
+         <div className="flex bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-2 rounded-lg items-center gap-2 mb-8">
+            <div className="px-4 text-slate-500 truncate flex-1 text-left select-all">
+               {shareUrl}
             </div>
-            <Button onClick={() => navigator.clipboard.writeText(window.location.origin + battleUrl)}>
+            <Button onClick={() => navigator.clipboard.writeText(shareUrl)}>
                <Copy className="h-4 w-4 mr-2" /> Copy Link
             </Button>
          </div>
 
+         <div className="flex flex-wrap items-center justify-center gap-4 py-4 mb-8">
+           <FacebookShareButton url={shareUrl} title={shareTitle}>
+             <FacebookIcon size={48} round />
+           </FacebookShareButton>
+           <FacebookMessengerShareButton url={shareUrl} appId="">
+             <FacebookMessengerIcon size={48} round />
+           </FacebookMessengerShareButton>
+           <WhatsappShareButton url={shareUrl} title={shareTitle} separator=":: ">
+             <WhatsappIcon size={48} round />
+           </WhatsappShareButton>
+           <TwitterShareButton url={shareUrl} title={shareTitle}>
+             <TwitterIcon size={48} round />
+           </TwitterShareButton>
+           <TelegramShareButton url={shareUrl} title={shareTitle}>
+             <TelegramIcon size={48} round />
+           </TelegramShareButton>
+         </div>
+
          <Link to={battleUrl}>
-            <Button variant="outline" className="gap-2">
+            <Button variant="outline" className="gap-2 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900">
                Go to Voting Page <ArrowRight className="h-4 w-4" />
             </Button>
          </Link>
@@ -154,6 +218,14 @@ export default function ThumbnailBattle() {
 
   return (
     <div className="container mx-auto max-w-5xl px-4 py-12">
+      {cropTarget && (
+        <CropModal 
+          imageSrc={cropTarget.url} 
+          onCropComplete={handleCropComplete} 
+          onCancel={() => setCropTarget(null)} 
+        />
+      )}
+      
       <div className="mb-12 text-center">
         <h1 className="text-3xl font-extrabold tracking-tight mb-4 text-gray-900 dark:text-white">
           Thumbnail Battle
@@ -189,9 +261,9 @@ export default function ThumbnailBattle() {
          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Thumb A */}
             <div className="space-y-4">
-               <h3 className="font-semibold text-center">Option A</h3>
+               <h3 className="font-semibold text-center text-gray-900 dark:text-white">Option A</h3>
                {!thumbAPreview ? (
-                  <div className="aspect-video bg-gray-50 dark:bg-gray-900 border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-xl flex flex-col items-center justify-center relative hover:bg-gray-100 cursor-pointer transition-colors">
+                  <div className="aspect-video bg-gray-50 dark:bg-gray-900 border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-xl flex flex-col items-center justify-center relative hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition-colors">
                      <Upload className="h-8 w-8 text-gray-400 mb-2" />
                      <span className="text-sm text-gray-500 text-center px-4">Upload Thumbnail</span>
                      <input type="file" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*" onChange={(e) => handleUpload(e, "A")} disabled={!user} />
@@ -208,9 +280,9 @@ export default function ThumbnailBattle() {
 
             {/* Thumb B */}
             <div className="space-y-4">
-               <h3 className="font-semibold text-center">Option B</h3>
+               <h3 className="font-semibold text-center text-gray-900 dark:text-white">Option B</h3>
                {!thumbBPreview ? (
-                  <div className="aspect-video bg-gray-50 dark:bg-gray-900 border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-xl flex flex-col items-center justify-center relative hover:bg-gray-100 cursor-pointer transition-colors">
+                  <div className="aspect-video bg-gray-50 dark:bg-gray-900 border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-xl flex flex-col items-center justify-center relative hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition-colors">
                      <Upload className="h-8 w-8 text-gray-400 mb-2" />
                      <span className="text-sm text-gray-500 text-center px-4">Upload Thumbnail</span>
                      <input type="file" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*" onChange={(e) => handleUpload(e, "B")} disabled={!user} />
@@ -226,9 +298,12 @@ export default function ThumbnailBattle() {
             </div>
          </div>
 
-         <div className="flex justify-center pt-8">
-            <Button size="lg" className="w-full md:w-auto px-12" disabled={!fileA || !fileB || creating || !user} onClick={createBattle}>
-               {creating ? "Creating Battle..." : "Create Battle Link"}
+         <div className="flex flex-col items-center space-y-4 pt-8">
+            <Button size="lg" className="w-full md:w-auto px-12 relative overflow-hidden" disabled={!fileA || !fileB || creating || !user} onClick={createBattle}>
+               {creating && (
+                 <div className="absolute inset-0 bg-red-800 pointer-events-none" style={{ width: `${uploadProgress}%`, transition: 'width 0.3s ease' }} />
+               )}
+               <span className="relative z-10">{creating ? `Uploading... ${Math.round(uploadProgress)}%` : "Create Battle Link"}</span>
             </Button>
          </div>
       </div>

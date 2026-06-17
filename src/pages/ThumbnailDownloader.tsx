@@ -100,23 +100,25 @@ export default function ThumbnailDownloader() {
                        (e.target as HTMLImageElement).parentElement!.innerHTML = '<div class="absolute inset-0 flex items-center justify-center text-sm text-gray-500">Thumbnail not available in this resolution</div>';
                     }}
                   />
-                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                    <Button variant="secondary" className="bg-white/90 text-black hover:bg-white" onClick={() => downloadImage(imgUrl, `thumbnail_${videoId}_${res.quality}.jpg`)}>
-                      <Download className="h-4 w-4 mr-2" />
-                      Download
-                    </Button>
+                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 pointer-events-none">
                   </div>
                 </div>
                 <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
                       <h3 className="font-semibold text-gray-900 dark:text-white">{res.name}</h3>
                       <p className="text-xs text-gray-500">{res.res}</p>
                     </div>
-                    <Button variant="ghost" size="sm" onClick={() => copyToClipboard(imgUrl, idx)}>
-                      {copiedIndex === idx ? <Check className="h-4 w-4 text-green-500 mr-2" /> : <Copy className="h-4 w-4 mr-2" />}
-                      Copy Link
-                    </Button>
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                      <Button variant="outline" size="sm" onClick={() => copyToClipboard(imgUrl, idx)} className="flex-1 sm:flex-none">
+                        {copiedIndex === idx ? <Check className="h-4 w-4 text-green-500 mr-2" /> : <Copy className="h-4 w-4 mr-2" />}
+                        Copy Link
+                      </Button>
+                      <Button size="sm" onClick={() => downloadImage(imgUrl, `thumbnail_${videoId}_${res.quality}.jpg`)} className="flex-1 sm:flex-none">
+                        <Download className="h-4 w-4 mr-2" />
+                        Download
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>

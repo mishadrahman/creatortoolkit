@@ -54,8 +54,8 @@ const tools = [
     description: "Brainstorm catchy, unique names for your creator brand.",
     icon: Type,
     href: "/channel-name-generator",
-    color: "text-slate-400",
-    bg: "bg-slate-800",
+    color: "text-slate-600 dark:text-slate-400",
+    bg: "bg-slate-100 dark:bg-slate-800",
     span: "md:col-span-12 lg:col-span-6 lg:row-span-2",
   },
   {
@@ -83,10 +83,10 @@ export default function Home() {
     <div className="container mx-auto px-4 py-12 md:py-16">
       {/* Hero Section */}
       <section className="text-center max-w-3xl mx-auto mb-12 flex flex-col gap-1 items-center">
-        <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-white mb-2">
+        <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-slate-900 dark:text-white mb-2">
           Free YouTube Creator Tools in One Place
         </h1>
-        <p className="text-slate-400 text-sm md:text-base">
+        <p className="text-slate-600 dark:text-slate-400 text-sm md:text-base">
           Everything you need to grow your channel, optimized for high performance.
         </p>
       </section>
@@ -95,7 +95,7 @@ export default function Home() {
       <section className="grid grid-cols-1 md:grid-cols-12 auto-rows-min gap-4 max-w-6xl mx-auto mb-16 lg:grid-flow-row-dense">
         {tools.map((tool) => (
           <Link key={tool.name} to={tool.href} className={`group cursor-pointer ${tool.span}`}>
-            <Card className="h-full transition-colors hover:border-slate-700 bg-slate-900 border-slate-800 rounded-2xl relative overflow-hidden group">
+            <Card className="h-full transition-colors hover:border-slate-300 dark:hover:border-slate-700 rounded-2xl relative overflow-hidden group">
               {tool.name === "Thumbnail Battle" && (
                 <div className="absolute top-5 right-5 pointer-events-none">
                   <span className="text-[10px] font-bold bg-red-500/10 text-red-500 px-2 py-1 rounded">HOT FEATURE</span>
@@ -105,8 +105,8 @@ export default function Home() {
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-3 ${tool.bg} ${tool.color}`}>
                   <tool.icon className="h-5 w-5" />
                 </div>
-                <CardTitle className="text-lg text-white font-bold group-hover:text-red-500 transition-colors">{tool.name}</CardTitle>
-                <CardDescription className="text-xs text-slate-500 mt-1">{tool.description}</CardDescription>
+                <CardTitle className="text-lg text-slate-900 dark:text-white font-bold group-hover:text-red-500 transition-colors">{tool.name}</CardTitle>
+                <CardDescription className="text-xs text-slate-500 dark:text-slate-400 mt-1">{tool.description}</CardDescription>
               </CardHeader>
             </Card>
           </Link>
@@ -115,8 +115,8 @@ export default function Home() {
       
       {/* FAQ / Content Section */}
       <section className="max-w-3xl mx-auto">
-        <h2 className="text-2xl font-bold mb-6 text-center text-white tracking-tight">Built for Growth</h2>
-        <div className="text-slate-400 leading-relaxed text-sm px-6 text-center">
+        <h2 className="text-2xl font-bold mb-6 text-center text-slate-900 dark:text-white tracking-tight">Built for Growth</h2>
+        <div className="text-slate-600 dark:text-slate-400 leading-relaxed text-sm px-6 text-center">
           <p>
             Creator Toolkit is designed by creators, for creators. Our tools help you manage the tedious parts 
             of publishing on YouTube so you can focus on making great videos. Whether you need a spark of inspiration 

@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../lib/AuthContext";
 import { db } from "../lib/firebase";
-import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
+import { collection, query, where, getDocs } from "firebase/firestore";
 import { Link } from "react-router-dom";
-import { BarChart, LogIn, ArrowRight } from "lucide-react";
-import { Button, Card, CardContent, CardHeader, CardTitle } from "../components/ui";
+import { BarChart, LogIn, ArrowRight, Share2, Check } from "lucide-react";
+import { Button, Card, CardContent } from "../components/ui";
 
 export default function MyBattles() {
   const { user, signIn, loading: authLoading } = useAuth();
   const [battles, setBattles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) {
@@ -41,6 +42,13 @@ export default function MyBattles() {
 
     fetchBattles();
   }, [user]);
+
+  const copyLink = (id: string) => {
+    const url = `${window.location.origin}/#/battle/${id}`;
+    navigator.clipboard.writeText(url);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
 
   if (authLoading || loading) {
     return (
@@ -159,6 +167,10 @@ export default function MyBattles() {
 
                   {/* Right Side: Actions */}
                   <div className="flex sm:flex-col gap-2 p-6 sm:p-0 bg-slate-50 dark:bg-slate-900/50 sm:bg-transparent border-t sm:border-t-0 border-slate-100 dark:border-slate-800">
+                    <Button variant="outline" className="flex-1 sm:flex-none w-full gap-2" onClick={() => copyLink(battle.id)}>
+                      {copiedId === battle.id ? <Check className="h-4 w-4 text-green-500" /> : <Share2 className="h-4 w-4" />}
+                      {copiedId === battle.id ? "Copied" : "Copy Link"}
+                    </Button>
                     <Link to={`/battle/${battle.id}`} className="flex-1 sm:flex-none w-full">
                       <Button className="w-full gap-2" variant="default">
                         View Details <ArrowRight className="h-4 w-4" />
