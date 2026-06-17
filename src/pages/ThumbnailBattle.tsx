@@ -44,42 +44,47 @@ export default function ThumbnailBattle() {
       // Helper to resize image so Telegram accepts it, only if > 5MB
       const resizeImage = (file: File): Promise<Blob | File> => {
         return new Promise((resolve, reject) => {
-          // Check file size (5MB = 5 * 1024 * 1024)
-          // Also try to keep as original as possible to avoid losing quality
-          if (file.size <= 5 * 1024 * 1024) {
-            return resolve(file);
-          }
-
           const reader = new FileReader();
           reader.onload = (e) => {
             const img = new Image();
             img.onload = () => {
+              const MAX_DIMENSION = 2560; // Telegram photo max dimension is usually 2560 on either side, sum 10000
+              const isOversizedFile = file.size > 5 * 1024 * 1024;
+              const isOversizedDimensions = img.width > MAX_DIMENSION || img.height > MAX_DIMENSION;
+
+              // If it's under 5MB AND dimensions are safe for Telegram, return original
+              if (!isOversizedFile && !isOversizedDimensions) {
+                return resolve(file);
+              }
+
               const canvas = document.createElement("canvas");
               const ctx = canvas.getContext("2d");
               
-              // Only slightly reduce dimensions to maintain quality
-              const MAX_DIMENSION = 2048;
               let width = img.width;
               let height = img.height;
               
-              if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
+              if (isOversizedDimensions) {
                  if (width > height) {
-                    height = (height * MAX_DIMENSION) / width;
+                    height = Math.round((height * MAX_DIMENSION) / width);
                     width = MAX_DIMENSION;
                  } else {
-                    width = (width * MAX_DIMENSION) / height;
+                    width = Math.round((width * MAX_DIMENSION) / height);
                     height = MAX_DIMENSION;
                  }
               }
-              
+
+              // Set canvas dimensions
               canvas.width = width;
               canvas.height = height;
+
+              // Draw image (this will auto-crop/fit within the new dimensions)
               ctx?.drawImage(img, 0, 0, width, height);
-              
+
+              // Extract and compress
               canvas.toBlob((blob) => {
                  if (blob) resolve(blob);
                  else reject(new Error("Blob conversion failed"));
-              }, "image/jpeg", 0.95); // High quality
+              }, file.type === "image/png" ? "image/png" : "image/jpeg", 0.90);
             };
             img.onerror = reject;
             img.src = e.target?.result as string;

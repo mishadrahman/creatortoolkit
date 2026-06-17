@@ -27,8 +27,7 @@ service cloud.firestore {
     }
 
     match /battles/{battleId} {
-      allow get: if isValidId(battleId);
-      allow list: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow read: if true;
       
       allow create: if isValidId(battleId) 
         && isValidBattle(incoming()) 
