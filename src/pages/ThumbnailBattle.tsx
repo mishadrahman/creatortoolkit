@@ -168,8 +168,10 @@ export default function ThumbnailBattle() {
   };
 
   if (battleId) {
+    const rawBase = (import.meta as any).env?.BASE_URL || "/";
+    const base = rawBase.endsWith('/') ? rawBase : rawBase + '/';
     const battleUrl = `/battle/${battleId}`;
-    const shareUrl = window.location.origin + battleUrl;
+    const shareUrl = window.location.origin + base + `battle/${battleId}`;
     const shareTitle = title || "Which thumbnail is better? Vote now!";
 
     return (
