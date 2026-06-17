@@ -44,7 +44,7 @@ export default function MyBattles() {
   }, [user]);
 
   const copyLink = (id: string) => {
-    const url = `${window.location.origin}/#/battle/${id}`;
+    const url = `${window.location.origin}/battle/${id}`;
     navigator.clipboard.writeText(url);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);

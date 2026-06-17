@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { HashRouter, Routes, Route, Link, Outlet } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link, Outlet } from "react-router-dom";
 import { Layout } from "lucide-react";
 
 import Home from "./pages/Home";
@@ -23,7 +23,7 @@ import { AuthProvider } from "./lib/AuthContext";
 export default function App() {
   return (
     <AuthProvider>
-      <HashRouter>
+      <BrowserRouter>
         <Routes>
           <Route path="/" element={<ToolbarLayout />}>
             <Route index element={<Home />} />
@@ -39,7 +39,7 @@ export default function App() {
           <Route path="tag-extractor" element={<TagExtractor />} />
         </Route>
       </Routes>
-    </HashRouter>
+    </BrowserRouter>
     </AuthProvider>
   );
 }

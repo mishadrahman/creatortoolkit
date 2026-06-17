@@ -169,7 +169,7 @@ export default function ThumbnailBattle() {
 
   if (battleId) {
     const battleUrl = `/battle/${battleId}`;
-    const shareUrl = window.location.origin + "/#" + battleUrl;
+    const shareUrl = window.location.origin + battleUrl;
     const shareTitle = title || "Which thumbnail is better? Vote now!";
 
     return (
