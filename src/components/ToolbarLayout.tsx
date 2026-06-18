@@ -3,7 +3,6 @@ import { Link, Outlet, useLocation } from "react-router-dom";
 import { Search, Youtube, Menu, Settings, X, LogIn, LogOut, Activity, Sun, Moon } from "lucide-react";
 import { Button } from "./ui";
 import { useAuth } from "../lib/AuthContext";
-import { motion, AnimatePresence } from "motion/react";
 
 export default function ToolbarLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
@@ -56,7 +55,7 @@ export default function ToolbarLayout() {
       <header className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/50 backdrop-blur">
         <div className="container mx-auto flex py-4 items-center px-4 md:px-8 justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <img src="https://i.ibb.co.com/N2VPgTpm/file-0000000054407209a4f9585660c0b08f.webp" alt="Toolzet Logo" className="w-8 h-8 rounded-lg object-cover shadow-lg shadow-red-600/10" referrerPolicy="no-referrer" />
+            <img src="https://i.ibb.co.com/N2VPgTpm/file-0000000054407209a4f9585660c0b08f.webp" alt="Toolzet Logo" className="w-8 h-8 rounded-lg object-cover shadow-lg shadow-red-600/10" width="32" height="32" referrerPolicy="no-referrer" />
             <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Tool<span className="text-red-600 dark:text-red-500">zet</span></span>
           </Link>
 
@@ -107,36 +106,30 @@ export default function ToolbarLayout() {
                     onClick={() => setProfileMenuOpen(!profileMenuOpen)}
                     title="Profile Menu"
                   >
-                    {user.photoURL && <img src={user.photoURL} alt="Profile" className="w-full h-full object-cover" />}
+                    {user.photoURL && <img src={user.photoURL} alt="Profile" className="w-full h-full object-cover" width="36" height="36" referrerPolicy="no-referrer" />}
                   </div>
                   
                   {/* Dropdown Menu */}
-                  <AnimatePresence>
-                    {profileMenuOpen && (
-                      <motion.div 
-                        initial={{ opacity: 0, scale: 0.95, y: -10 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                        transition={{ duration: 0.15, ease: "easeOut" }}
-                        className="absolute right-0 mt-3 w-48 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-2 z-50 origin-top-right"
+                  {profileMenuOpen && (
+                    <div 
+                      className="absolute right-0 mt-3 w-48 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-2xl py-2 z-50 origin-top-right transition-all duration-150 animate-in fade-in zoom-in-95"
+                    >
+                      <div className="px-4 py-2 border-b border-slate-200 dark:border-slate-800 mb-2">
+                         <p className="text-sm font-medium text-slate-900 dark:text-white truncate">{user.displayName || "User"}</p>
+                         <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{user.email || ""}</p>
+                      </div>
+                      <button 
+                        onClick={() => {
+                          setProfileMenuOpen(false);
+                          logOut();
+                        }}
+                        className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-2"
                       >
-                        <div className="px-4 py-2 border-b border-slate-200 dark:border-slate-800 mb-2">
-                           <p className="text-sm font-medium text-slate-900 dark:text-white truncate">{user.displayName || "User"}</p>
-                           <p className="text-xs text-slate-500 dark:text-slate-400 truncate">{user.email || ""}</p>
-                        </div>
-                        <button 
-                          onClick={() => {
-                            setProfileMenuOpen(false);
-                            logOut();
-                          }}
-                          className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-2"
-                        >
-                          <LogOut className="h-4 w-4" />
-                          Logout
-                        </button>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                        <LogOut className="h-4 w-4" />
+                        Logout
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             ) : (
@@ -149,49 +142,41 @@ export default function ToolbarLayout() {
         </div>
 
         {/* Mobile Nav */}
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div 
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2 }}
-              className="md:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 space-y-4 overflow-hidden"
-            >
-              <div className="py-4">
-                <nav className="flex flex-col gap-4 text-sm font-medium text-slate-600 dark:text-slate-400">
-                  {navLinks.map((link) => (
-                    <Link
-                      key={link.name}
-                      to={link.href}
-                      className={location.pathname === link.href ? "text-slate-900 dark:text-white" : "hover:text-slate-900 dark:hover:text-white"}
-                    >
-                      {link.name}
-                    </Link>
-                  ))}
-                  {user && (
-                    <Link to="/my-battles" className={location.pathname === "/my-battles" ? "text-slate-900 dark:text-white" : "hover:text-slate-900 dark:hover:text-white"}>
-                      My Battles
-                    </Link>
-                  )}
-                </nav>
-                <div className="pt-4 border-t border-slate-200 dark:border-slate-800 mt-4">
-                  {user ? (
-                    <Button variant="outline" className="w-full justify-start text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800" onClick={logOut}>
-                      <LogOut className="h-4 w-4 mr-2" />
-                      Logout ({user.displayName || 'User'})
-                    </Button>
-                  ) : (
-                    <Button variant="default" className="w-full justify-start bg-red-600 hover:bg-red-700 text-white border-0" onClick={signIn}>
-                      <LogIn className="h-4 w-4 mr-2" />
-                      Login
-                    </Button>
-                  )}
-                </div>
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 space-y-4 overflow-hidden transition-all duration-200 animate-in slide-in-from-top-4">
+            <div className="py-4">
+              <nav className="flex flex-col gap-4 text-sm font-medium text-slate-600 dark:text-slate-400">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.name}
+                    to={link.href}
+                    className={location.pathname === link.href ? "text-slate-900 dark:text-white" : "hover:text-slate-900 dark:hover:text-white"}
+                  >
+                    {link.name}
+                  </Link>
+                ))}
+                {user && (
+                  <Link to="/my-battles" className={location.pathname === "/my-battles" ? "text-slate-900 dark:text-white" : "hover:text-slate-900 dark:hover:text-white"}>
+                    My Battles
+                  </Link>
+                )}
+              </nav>
+              <div className="pt-4 border-t border-slate-200 dark:border-slate-800 mt-4">
+                {user ? (
+                  <Button variant="outline" className="w-full justify-start text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800" onClick={logOut}>
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Logout ({user.displayName || 'User'})
+                  </Button>
+                ) : (
+                  <Button variant="default" className="w-full justify-start bg-red-600 hover:bg-red-700 text-white border-0" onClick={signIn}>
+                    <LogIn className="h-4 w-4 mr-2" />
+                    Login
+                  </Button>
+                )}
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            </div>
+          </div>
+        )}
       </header>
 
       {/* Main Content */}
