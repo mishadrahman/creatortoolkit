@@ -18,6 +18,68 @@ function getApiKeys(): string[] {
     .filter(k => k.length > 0);
 }
 
+// Resilient helper to call Gemini API with model fallback and exponential backoff retry on transient errors
+async function callGeminiWithFallbackAndRetry(apiKey: string, prompt: string, systemInstruction?: string): Promise<string> {
+  // Try newer high-capacity models first, falling back to other compatible models if busy
+  const modelsToTry = ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-1.5-flash", "gemini-1.5-pro"];
+  const maxRetries = 2; // up to 3 attempts total per model
+  let lastError: any = null;
+
+  for (const model of modelsToTry) {
+    for (let attempt = 0; attempt <= maxRetries; attempt++) {
+      try {
+        console.log(`Calling Gemini API (model: ${model}, attempt: ${attempt + 1}/${maxRetries + 1})...`);
+        const ai = new GoogleGenAI({ 
+          apiKey,
+          httpOptions: {
+            headers: {
+              'User-Agent': 'aistudio-build',
+            }
+          }
+        });
+        const response = await ai.models.generateContent({
+          model,
+          contents: prompt,
+          config: {
+            systemInstruction,
+          },
+        });
+
+        if (response && response.text) {
+          console.log(`Successfully generated text with model ${model} on attempt ${attempt + 1}.`);
+          return response.text;
+        }
+        throw new Error(`Empty response returned from model ${model}`);
+      } catch (err: any) {
+        lastError = err;
+        const errMsg = err.message || JSON.stringify(err);
+        const statusCode = err.status || (errMsg.includes("503") ? 503 : errMsg.includes("429") ? 429 : null);
+        
+        // Treat 503 (UNAVAILABLE), 429 (RESOURCE_EXHAUSTED), connection errors, or high-demand alerts as transient
+        const isTransient = !statusCode || 
+                            statusCode === 503 || 
+                            statusCode === 429 || 
+                            errMsg.includes("RESOURCE_EXHAUSTED") || 
+                            errMsg.includes("UNAVAILABLE") || 
+                            errMsg.includes("high demand") ||
+                            errMsg.includes("busy");
+
+        console.warn(`Attempt ${attempt + 1} with model ${model} failed: ${errMsg}`);
+
+        if (isTransient && attempt < maxRetries) {
+          const delay = Math.pow(2, attempt) * 1000;
+          console.log(`Transient error encountered. Retrying in ${delay}ms...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+        } else {
+          // Break the retry loop to immediately try the next fallback model in the list
+          break;
+        }
+      }
+    }
+  }
+  throw lastError || new Error("Failed to generate content with all available models and retries.");
+}
+
 async function startServer() {
   const app = express();
   const PORT = 3000;
@@ -48,23 +110,12 @@ async function startServer() {
           const sanitizedKey = activeKey.replace(/['"]/g, "").trim();
           console.log(`Attempting generation with Gemini API key index ${i}/${keys.length}...`);
           
-          const ai = new GoogleGenAI({ apiKey: sanitizedKey });
-          const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash",
-            contents: prompt,
-            config: {
-              systemInstruction,
-            },
-          });
-          
-          if (response && response.text) {
-            generatedText = response.text;
-            success = true;
-            console.log(`Successful generation using Gemini API key index ${i}!`);
-            break; // Exit loop on success
-          }
+          generatedText = await callGeminiWithFallbackAndRetry(sanitizedKey, prompt, systemInstruction);
+          success = true;
+          console.log(`Successful generation using Gemini API key index ${i}!`);
+          break; // Exit loop on success
         } catch (err: any) {
-          console.error(`Error with Gemini key index ${i}:`, err.message || err);
+          console.error(`Error with Gemini key index ${i} after all fallbacks and retries:`, err.message || err);
           lastError = err;
         }
       }
