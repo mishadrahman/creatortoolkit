@@ -7,9 +7,9 @@ import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ToolbarLayout from "./components/ToolbarLayout";
 import { AuthProvider } from "./lib/AuthContext";
+import Home from "./pages/Home";
 
-// Lazy-loaded pages to enable code splitting
-const Home = lazy(() => import("./pages/Home"));
+// Lazy-loaded pages to enable code splitting for heavy sub-tools
 const ThumbnailDownloader = lazy(() => import("./pages/ThumbnailDownloader"));
 const ThumbnailPreview = lazy(() => import("./pages/ThumbnailPreview"));
 const ThumbnailBattle = lazy(() => import("./pages/ThumbnailBattle"));
@@ -39,11 +39,7 @@ export default function App() {
       <BrowserRouter basename={(import.meta as any).env?.BASE_URL || '/'}>
         <Routes>
           <Route path="/" element={<ToolbarLayout />}>
-            <Route index element={
-              <Suspense fallback={<PageLoader />}>
-                <Home />
-              </Suspense>
-            } />
+            <Route index element={<Home />} />
             <Route path="thumbnail-downloader" element={
               <Suspense fallback={<PageLoader />}>
                 <ThumbnailDownloader />
