@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Sparkles, Copy, RefreshCw, Check, Star } from "lucide-react";
 import { Button, Input, Card, CardContent } from "../components/ui";
+import SEO from "../components/SEO";
 
 export default function ChannelNameGenerator() {
   const [niche, setNiche] = useState("");
@@ -43,6 +44,11 @@ export default function ChannelNameGenerator() {
 
   return (
     <div className="container mx-auto max-w-4xl px-4 py-12">
+      <SEO 
+        title="AI YouTube Channel Name Generator | Brand Ideas Brainstormer"
+        description="Generate highly-memorizable, unique, and catchiest brand name suggestions and handles for your YouTube launch. Custom-matched to target your niche, audience, and Search Engine metrics."
+        keywords="youtube channel name generator, brand ideas brainstorming, find channel handles, channel name ideas, creative creator nicknames, content username finder"
+      />
       <div className="mb-12 text-center">
         <h1 className="text-3xl font-extrabold tracking-tight mb-4 text-gray-900 dark:text-white">
           Channel Name Generator

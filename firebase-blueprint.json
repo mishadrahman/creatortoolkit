@@ -13,12 +13,31 @@
         "createdAt": { "type": "string", "description": "ISO date string" }
       },
       "required": ["title", "thumbA", "thumbB", "votesA", "votesB", "createdAt"]
+    },
+    "SupportTicket": {
+      "title": "SupportTicket",
+      "description": "A support request or feedback ticket logged by a content creator",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 150 },
+        "email": { "type": "string", "format": "email" },
+        "subject": { "type": "string", "maxLength": 200 },
+        "message": { "type": "string", "maxLength": 5000 },
+        "userId": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "status": { "type": "string", "enum": ["open", "closed", "in-progress"] }
+      },
+      "required": ["name", "email", "subject", "message", "userId", "createdAt", "status"]
     }
   },
   "firestore": {
     "/battles/{battleId}": {
       "schema": { "$ref": "#/entities/Battle" },
       "description": "Stores thumbnail A/B testing battles"
+    },
+    "/support_tickets/{ticketId}": {
+      "schema": { "$ref": "#/entities/SupportTicket" },
+      "description": "Stores user submitted support requests"
     }
   }
 }

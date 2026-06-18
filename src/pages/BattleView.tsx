@@ -107,7 +107,46 @@ export default function BattleView() {
   };
 
   if (loading) {
-    return <div className="min-h-[50vh] flex items-center justify-center">Loading battle...</div>;
+    return (
+      <div className="container mx-auto max-w-5xl px-4 py-12 md:py-24">
+        {/* Pulsing Header */}
+        <div className="mb-12 text-center animate-pulse">
+          <div className="h-8 bg-slate-200 dark:bg-slate-800 rounded-xl w-3/4 md:w-1/2 mx-auto mb-4"></div>
+          <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded-lg w-1/2 md:w-1/3 mx-auto"></div>
+        </div>
+
+        {/* Pulsing Option Blocks */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          {/* Option A Skeleton */}
+          <div className="space-y-6 animate-pulse">
+            <div className="aspect-video rounded-xl bg-slate-200 dark:bg-slate-800 w-full relative overflow-hidden flex items-center justify-center border border-slate-300/30">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_1.5s_infinite]" />
+              <div className="text-slate-400 dark:text-slate-600 font-bold text-lg select-none">Option A</div>
+            </div>
+            <div className="h-11 bg-slate-200 dark:bg-slate-800 rounded-xl w-full"></div>
+          </div>
+
+          {/* Option B Skeleton */}
+          <div className="space-y-6 animate-pulse">
+            <div className="aspect-video rounded-xl bg-slate-200 dark:bg-slate-800 w-full relative overflow-hidden flex items-center justify-center border border-slate-300/30">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-[shimmer_1.5s_infinite]" />
+              <div className="text-slate-400 dark:text-slate-600 font-bold text-lg select-none">Option B</div>
+            </div>
+            <div className="h-11 bg-slate-200 dark:bg-slate-800 rounded-xl w-full"></div>
+          </div>
+        </div>
+
+        {/* Social Share Indicator Skeleton */}
+        <div className="mt-16 text-center max-w-xl mx-auto space-y-4 border-t border-slate-100 dark:border-slate-800 pt-8 animate-pulse">
+          <div className="h-5 bg-slate-200 dark:bg-slate-800 rounded w-1/4 mx-auto mb-2"></div>
+          <div className="flex justify-center gap-4">
+            {[1, 2, 3, 4, 5].map((idx) => (
+              <div key={idx} className="w-12 h-12 bg-slate-200 dark:bg-slate-800 rounded-full"></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (!battle) {

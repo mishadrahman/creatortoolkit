@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Sparkles, Copy, RefreshCw, Check } from "lucide-react";
 import { Button, Input, Card, CardContent } from "../components/ui";
+import SEO from "../components/SEO";
 
 export default function TitleGenerator() {
   const [topic, setTopic] = useState("");
@@ -43,6 +44,11 @@ export default function TitleGenerator() {
 
   return (
     <div className="container mx-auto max-w-4xl px-4 py-12">
+      <SEO 
+        title="AI YouTube Title Generator | High CTR Headlines"
+        description="Write highly-engaging, viral, and click-boosting video titles. Powered by advanced AI to find popular niches, structures, and keywords that increase viewer clicks and search rank."
+        keywords="youtube title generator, high ctr titles, viral title generation, video seo headline optimizer, copy clickbait hook titles, youtube headline generator, search friendly video titles"
+      />
       <div className="mb-12 text-center">
         <h1 className="text-3xl font-extrabold tracking-tight mb-4 text-gray-900 dark:text-white">
           YouTube Title Generator

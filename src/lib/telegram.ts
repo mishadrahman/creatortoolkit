@@ -1,14 +1,20 @@
-export const TELEGRAM_BOT_TOKEN = "1988624744:AAFUFeLE6soEn1B_jwQM1TaynP_fDmaNSz0";
-export const TELEGRAM_CHAT_ID = "-1004308800425";
+const blobToBase64 = (blob: Blob): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+};
 
 export const uploadToTelegram = async (file: File | Blob, onProgress?: (percent: number) => void): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const formData = new FormData();
-    formData.append("photo", file);
-    formData.append("chat_id", TELEGRAM_CHAT_ID);
+  const base64Image = await blobToBase64(file);
+  const name = "name" in file ? (file as any).name : "photo.webp";
 
+  return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`);
+    xhr.open("POST", "/api/telegram/upload");
+    xhr.setRequestHeader("Content-Type", "application/json");
 
     if (onProgress) {
       xhr.upload.onprogress = (event) => {
@@ -20,31 +26,20 @@ export const uploadToTelegram = async (file: File | Blob, onProgress?: (percent:
     }
 
     xhr.onload = () => {
-      if (xhr.status >= 200 && xhr.status < 300) {
-        try {
-          const data = JSON.parse(xhr.responseText);
-          if (data.ok) {
-            const photos = data.result.photo;
-            const fileId = photos[photos.length - 1].file_id;
-            resolve(fileId);
-          } else {
-            reject(new Error(data.description || "Upload failed"));
-          }
-        } catch (e) {
-          reject(new Error("Invalid response from server"));
+      try {
+        const data = JSON.parse(xhr.responseText);
+        if (xhr.status >= 200 && xhr.status < 300 && data.ok) {
+          resolve(data.fileId);
+        } else {
+          reject(new Error(data.error || "Upload failed"));
         }
-      } else {
-        try {
-          const data = JSON.parse(xhr.responseText);
-          reject(new Error(data.description || "Failed to upload to Telegram"));
-        } catch (e) {
-          reject(new Error(`HTTP Error ${xhr.status}`));
-        }
+      } catch (e) {
+        reject(new Error("Invalid response from server"));
       }
     };
 
     xhr.onerror = () => reject(new Error("Network Error occurred during upload"));
-    xhr.send(formData);
+    xhr.send(JSON.stringify({ image: base64Image, name }));
   });
 };
 
@@ -54,14 +49,14 @@ export const getTelegramFileUrl = async (fileId: string): Promise<string> => {
     return fileId;
   }
 
-  const res = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getFile?file_id=${fileId}`);
+  const res = await fetch(`/api/telegram/file-url/${encodeURIComponent(fileId)}`);
   if (!res.ok) {
      const error = await res.json();
-     throw new Error(error.description || "Failed to get file URL");
+     throw new Error(error.error || "Failed to get file URL");
   }
 
   const data = await res.json();
-  if (!data.ok) throw new Error(data.description || "Failed to get file URL");
+  if (!data.ok) throw new Error(data.error || "Failed to get file URL");
   
-  return `https://api.telegram.org/file/bot${TELEGRAM_BOT_TOKEN}/${data.result.file_path}`;
+  return data.url;
 };

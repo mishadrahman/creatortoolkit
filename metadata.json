@@ -1,6 +1,6 @@
 {
-  "name": "Creator Toolkit",
-  "description": "An all-in-one suite of free growth tools for YouTube creators, including SEO optimization and thumbnail battles.",
+  "name": "Toolzet",
+  "description": "An all-in-one suite of free dynamic growth tools for online creators and builders, featuring advanced SEO optimization, tags indexing, title crafting, and thumbnail testing.",
   "requestFramePermissions": ["clipboard-read", "clipboard-write"],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

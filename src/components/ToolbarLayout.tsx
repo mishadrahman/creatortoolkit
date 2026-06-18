@@ -56,8 +56,8 @@ export default function ToolbarLayout() {
       <header className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/50 backdrop-blur">
         <div className="container mx-auto flex py-4 items-center px-4 md:px-8 justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center font-bold text-white shadow-lg shadow-red-600/20">C</div>
-            <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Creator<span className="text-red-600 dark:text-red-500">Toolkit</span></span>
+            <div className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center font-bold text-white shadow-lg shadow-red-600/20">T</div>
+            <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Tool<span className="text-red-600 dark:text-red-500">zet</span></span>
           </Link>
 
           {/* Desktop Nav */}
@@ -201,11 +201,17 @@ export default function ToolbarLayout() {
 
       {/* Footer */}
       <footer className="border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/80 px-4 md:px-8 py-6 flex flex-col md:flex-row items-center justify-between text-[11px] text-slate-500 w-full mt-auto">
-        <div className="flex gap-4 md:gap-8 mb-4 md:mb-0 max-w-full overflow-x-auto">
-          <a href="#" className="hover:text-slate-900 dark:hover:text-slate-300 transition-colors whitespace-nowrap">Privacy Policy</a>
-          <a href="#" className="hover:text-slate-900 dark:hover:text-slate-300 transition-colors whitespace-nowrap">Terms of Service</a>
-          <a href="#" className="hover:text-slate-900 dark:hover:text-slate-300 transition-colors whitespace-nowrap">Sitemap</a>
-          <a href="#" className="hover:text-slate-900 dark:hover:text-slate-300 transition-colors whitespace-nowrap">Contact Support</a>
+        <div className="flex flex-col gap-2 mb-4 md:mb-0">
+          <div className="flex gap-4 md:gap-6 justify-center md:justify-start">
+            <Link to="/privacy-policy" className="hover:text-slate-900 dark:hover:text-slate-300 transition-colors whitespace-nowrap">Privacy Policy</Link>
+            <span className="text-slate-300 dark:text-slate-800 hidden md:inline">•</span>
+            <Link to="/terms-of-service" className="hover:text-slate-900 dark:hover:text-slate-300 transition-colors whitespace-nowrap">Terms of Service</Link>
+          </div>
+          <div className="flex gap-4 md:gap-6 justify-center md:justify-start">
+            <a href="/sitemap.xml" target="_blank" rel="noopener noreferrer" className="hover:text-slate-900 dark:hover:text-slate-300 transition-colors whitespace-nowrap">Sitemap.xml</a>
+            <span className="text-slate-300 dark:text-slate-800 hidden md:inline">•</span>
+            <Link to="/contact-support" className="hover:text-slate-900 dark:hover:text-slate-300 transition-colors whitespace-nowrap">Contact Support</Link>
+          </div>
         </div>
         <div className="flex flex-col md:flex-row items-center gap-4 hidden md:flex">
           <div className="flex -space-x-2">
@@ -215,7 +221,7 @@ export default function ToolbarLayout() {
           </div>
           <span>Trusted by 12,000+ Creators</span>
         </div>
-        <div className="mt-4 md:mt-0">© {new Date().getFullYear()} Creator Toolkit. Built for Success.</div>
+        <div className="mt-4 md:mt-0">© {new Date().getFullYear()} Toolzet. Built for Success.</div>
       </footer>
     </div>
   );

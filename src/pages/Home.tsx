@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Image as ImageIcon, Sparkles, Hash, AlignLeft, Type, Tags, LayoutList, CheckCircle2, ChevronRight } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui";
+import SEO from "../components/SEO";
 
 const categories = [
-  { id: "all", name: "All Creator Tools" },
+  { id: "all", name: "All Tools" },
   { id: "design", name: "Visuals & Design" },
   { id: "ai", name: "AI Writers" },
   { id: "seo", name: "SEO & Discovery" },
@@ -110,20 +111,6 @@ const tools = [
     badgeColor: "bg-purple-50 text-purple-700 dark:bg-purple-950/40 dark:text-purple-300",
     span: "md:col-span-6 lg:col-span-3 lg:row-span-1",
   },
-  {
-    name: "Tag Extractor",
-    category: "seo",
-    categoryLabel: "SEO Metadata",
-    purpose: "Extract behind-the-scenes keywords and hidden tag metadata from competitor videos to analyze trends.",
-    icon: Tags,
-    href: "/tag-extractor",
-    color: "text-teal-600 dark:text-teal-400",
-    bg: "bg-teal-50 dark:bg-teal-950/20",
-    borderColor: "group-hover:border-teal-300 dark:group-hover:border-teal-800",
-    glow: "group-hover:shadow-[0_0_25px_-5px_rgba(20,184,166,0.12)]",
-    badgeColor: "bg-teal-50 text-teal-700 dark:bg-teal-950/40 dark:text-teal-300",
-    span: "md:col-span-6 lg:col-span-3 lg:row-span-1",
-  },
 ];
 
 export default function Home() {
@@ -135,6 +122,11 @@ export default function Home() {
 
   return (
     <div className="relative min-h-[85vh] overflow-hidden">
+      <SEO 
+        title="Free AI YouTube Creator Tools & A/B Tester"
+        description="Boost your click-through rate (CTR) and views with Toolzet. Compare video cover thumbnails using interactive A/B battles, test mobile feed views, find high-ranking titles, tags, and custom channel brand handles."
+        keywords="youtube SEO tools, youtube thumbnail ab test, youtube keyword research tool, thumbnail preview tool, best hashtags for youtube, boost youtube ctr, viral youtube video titles, find channel names, youtube branding suite"
+      />
       {/* Dynamic Ambient Background Elements */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-red-400/5 dark:bg-red-500/5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-indigo-400/5 dark:bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
@@ -144,13 +136,13 @@ export default function Home() {
         {/* Hero Section */}
         <section className="text-center max-w-3xl mx-auto mb-10 flex flex-col gap-1 items-center">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-500/5 dark:bg-red-500/10 text-red-500 text-xs font-semibold tracking-wider uppercase mb-3 border border-red-500/10">
-            <Sparkles className="w-3.5 h-3.5" /> Optimize Your Channel
+            <Sparkles className="w-3.5 h-3.5" /> All-In-One Toolkit
           </div>
-          <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-2">
-            Free YouTube Creator Tools in One Place
+          <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight mb-3">
+            Smart tools for creators, marketers and everyday users.
           </h1>
-          <p className="text-slate-600 dark:text-slate-400 text-sm md:text-base max-w-xl">
-            Everything you need to grow your channel, brainstorm custom ideas, and boost click-through performance.
+          <p className="text-slate-600 dark:text-slate-400 text-sm md:text-base max-w-2xl">
+            Everything you need to level up your branding, optimize search discovery metrics, preview cover art, and write highly-engaging copy in seconds.
           </p>
         </section>
 
@@ -221,7 +213,7 @@ export default function Home() {
           <h2 className="text-2xl font-black mb-6 text-center text-slate-900 dark:text-white tracking-tight">Built for Growth</h2>
           <div className="text-slate-600 dark:text-slate-400 leading-relaxed text-sm px-6 text-center">
             <p>
-              Creator Toolkit is designed by creators, for creators. Our tools help you manage the tedious parts 
+              Toolzet is designed by creators, for creators. Our tools help you manage the tedious parts 
               of publishing on YouTube so you can focus on making great videos. Whether you need a spark of inspiration 
               for your next video title, or an optimized description for better SEO, we have you covered.
             </p>

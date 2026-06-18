@@ -6,234 +6,184 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+// Helper to get all configured API keys (comma-separated or single)
+function getApiKeys(): string[] {
+  const keysInput = process.env.GEMINI_API_KEY || "";
+  if (!keysInput) {
+    return [];
+  }
+  return keysInput
+    .split(",")
+    .map(k => k.trim())
+    .filter(k => k.length > 0);
+}
 
 async function startServer() {
   const app = express();
   const PORT = 3000;
 
-  app.use(express.json());
+  // Set body size parser limit to 50MB for base64 image uploads
+  app.use(express.json({ limit: "50mb" }));
+  app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
   // API Routes
   app.post("/api/generate", async (req, res) => {
     try {
       const { prompt, systemInstruction } = req.body;
-      const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: prompt,
-        config: {
-          systemInstruction,
-        },
-      });
-      res.json({ text: response.text });
-    } catch (error) {
-      console.error("Gemini API Error:", error);
-      res.status(500).json({ error: "Failed to generate content" });
-    }
-  });
-
-  // Extract tags route (server side fetch to avoid CORS)
-  app.post("/api/extract-tags", async (req, res) => {
-    try {
-      const { url } = req.body;
-      if (!url) {
-        return res.status(400).json({ error: "URL is required" });
+      const keys = getApiKeys();
+      
+      if (keys.length === 0) {
+        throw new Error("GEMINI_API_KEY is not defined. Please configure it in your environment settings.");
       }
 
-      // Normalization: Prepend https:// if not present
-      let normalizedUrl = url.trim();
-      if (!normalizedUrl.startsWith("http://") && !normalizedUrl.startsWith("https://")) {
-        normalizedUrl = "https://" + normalizedUrl;
-      }
-
-      // Extract raw YouTube video ID if possible
-      const youtubeVideoIdRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/ ]{11})/i;
-      const videoIdMatch = normalizedUrl.match(youtubeVideoIdRegex);
-      const videoId = videoIdMatch ? videoIdMatch[1] : null;
-
-      let targetUrl = normalizedUrl;
-      if (videoId) {
-        targetUrl = `https://www.youtube.com/watch?v=${videoId}`;
-      }
-
-      const tagsSet = new Set<string>();
-      let html = "";
-      let fetchSuccess = false;
-
-      try {
-        const response = await fetch(targetUrl, {
-          headers: {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-            "Accept-Language": "en-US,en;q=0.5",
-          }
-        });
-        if (response.ok) {
-          html = await response.text();
-          fetchSuccess = true;
-        }
-      } catch (fetchErr) {
-        console.error("Direct fetch failed, falling back...", fetchErr);
-      }
-
-      if (fetchSuccess && html) {
-        // 1. Try extracting from og:video:tag properties which YouTube emits separately per tag
-        const ogTagRegex = /<meta\s+property=["']og:video:tag["']\s+content=["'](.*?)["']/gi;
-        let match;
-        while ((match = ogTagRegex.exec(html)) !== null) {
-          if (match[1]) {
-            tagsSet.add(match[1].trim());
-          }
-        }
-
-        // 2. Try extracting from general keywords metadata
-        const keywordsRegex = /<meta\s+name=["']keywords["']\s+content=["'](.*?)["']/i;
-        const keywordsMatch = html.match(keywordsRegex);
-        if (keywordsMatch && keywordsMatch[1]) {
-          keywordsMatch[1].split(",").forEach(t => {
-            const trimmed = t.trim();
-            if (trimmed) tagsSet.add(trimmed);
-          });
-        }
-
-        // 3. Try parsing from JSON keywords array in source text
-        const jsonKeywordsRegex = /"keywords"\s*:\s*\[(.*?)\]/;
-        const jsonMatch = html.match(jsonKeywordsRegex);
-        if (jsonMatch && jsonMatch[1]) {
-          try {
-            const parsed = JSON.parse(`[${jsonMatch[1]}]`);
-            if (Array.isArray(parsed)) {
-              parsed.forEach((t: any) => {
-                if (typeof t === "string" && t.trim()) {
-                  tagsSet.add(t.trim());
-                }
-              });
-            }
-          } catch (e) {
-            const individualTags = jsonMatch[1].match(/"([^"]+)"/g);
-            if (individualTags) {
-              individualTags.forEach(t => {
-                const cleaned = t.replace(/"/g, "").trim();
-                if (cleaned) tagsSet.add(cleaned);
-              });
-            }
-          }
-        }
-
-        // 4. Try parsing from modern inner JSON "tags" array which stores actual tags
-        const tagsRegex = /"tags"\s*:\s*\[([^\]]+)\]/g;
-        let tagsMatch;
-        while ((tagsMatch = tagsRegex.exec(html)) !== null) {
-          const innerSection = tagsMatch[1];
-          const items = innerSection.match(/"([^"]+)"/g);
-          if (items) {
-            items.forEach(item => {
-              const cleaned = item.replace(/"/g, "").trim();
-              if (cleaned && cleaned.length > 0 && cleaned.toLowerCase() !== "tags") {
-                tagsSet.add(cleaned);
-              }
-            });
-          }
-        }
-      }
-
-      // 5. OEMBED + GEMINI SMART BACKUP FLOW:
-      // If we got 0 tags (due to CAPTCHA blocking, hidden tags, or modern YouTube deprecations), 
-      // but we have a valid videoId, fetch the public metadata from oEmbed and use Gemini to generate highly optimized tags!
-      if (tagsSet.size === 0 && videoId) {
+      let lastError: any = null;
+      let generatedText = "";
+      let success = false;
+      
+      // Try each API key in sequence until one succeeds
+      for (let i = 0; i < keys.length; i++) {
+        const activeKey = keys[i];
         try {
-          const oembedUrl = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`;
-          const oembedResponse = await fetch(oembedUrl);
-          if (oembedResponse.ok) {
-            const oembedData = await oembedResponse.json();
-            if (oembedData && oembedData.title) {
-              const title = oembedData.title;
-              const author = oembedData.author_name || "";
-
-              const prompt = `You are a professional YouTube SEO keyword specialist. Generate a clean list of the 15-25 most popular, relevant, and high-performance search tags and high-volume keywords for a video with:
-Title: "${title}"
-Creator/Author: "${author}"
-
-Output must be a valid, raw JSON array of strings. Do not include markdown formatting or backticks.
-Example: ["tag 1", "tag 2", "tag 3"]`;
-
-              const response = await ai.models.generateContent({
-                model: "gemini-2.5-flash",
-                contents: prompt,
-                config: {
-                  responseMimeType: "application/json"
-                }
-              });
-
-              if (response.text) {
-                const parsed = JSON.parse(response.text.trim());
-                if (Array.isArray(parsed)) {
-                  parsed.forEach(t => {
-                    const cleaned = String(t).trim();
-                    if (cleaned) tagsSet.add(cleaned);
-                  });
-                }
-              }
-            }
-          }
-        } catch (oembedErr) {
-          console.error("Backup oEmbed/Gemini recovery failed:", oembedErr);
-        }
-      }
-
-      // 6. DEEP HTML-TITLE BACKUP:
-      // If still nothing, extract title from HTML and generate via Gemini
-      if (tagsSet.size === 0 && html) {
-        let title = "";
-        const titleMatch = html.match(/<title>(.*?)<\/title>/i) || html.match(/<meta\s+property=["']og:title["']\s+content=["'](.*?)["']/i);
-        if (titleMatch && titleMatch[1]) {
-          title = titleMatch[1].replace("- YouTube", "").trim();
-        }
-
-        let desc = "";
-        const descMatch = html.match(/<meta\s+name=["']description["']\s+content=["'](.*?)["']/i) || html.match(/<meta\s+property=["']og:description["']\s+content=["'](.*?)["']/i);
-        if (descMatch && descMatch[1]) {
-          desc = descMatch[1].trim();
-        }
-
-        if (title && title !== "YouTube") {
-          const prompt = `You are a professional YouTube SEO keyword specialist. Extract or generate a clean JSON array of the 15-25 most popular, relevant search tags and high-volume keywords for a video with:
-Title: "${title}"
-${desc ? `Description: "${desc.substring(0, 400)}"` : ""}
-
-Output must be a valid raw JSON array of strings. Do not include markdown formatting or backticks.
-Example: ["tag 1", "tag 2", "tag 3"]`;
-
+          // Cleanly replace any potential quote marks inside the keys
+          const sanitizedKey = activeKey.replace(/['"]/g, "").trim();
+          console.log(`Attempting generation with Gemini API key index ${i}/${keys.length}...`);
+          
+          const ai = new GoogleGenAI({ apiKey: sanitizedKey });
           const response = await ai.models.generateContent({
             model: "gemini-2.5-flash",
             contents: prompt,
             config: {
-              responseMimeType: "application/json"
-            }
+              systemInstruction,
+            },
           });
-
-          if (response.text) {
-            try {
-              const parsed = JSON.parse(response.text.trim());
-              if (Array.isArray(parsed)) {
-                parsed.forEach(t => {
-                  const cleaned = String(t).trim();
-                  if (cleaned) tagsSet.add(cleaned);
-                });
-              }
-            } catch (err) {
-              console.error("Gemini fallback parse error:", err);
-            }
+          
+          if (response && response.text) {
+            generatedText = response.text;
+            success = true;
+            console.log(`Successful generation using Gemini API key index ${i}!`);
+            break; // Exit loop on success
           }
+        } catch (err: any) {
+          console.error(`Error with Gemini key index ${i}:`, err.message || err);
+          lastError = err;
         }
       }
-
-      const tags = Array.from(tagsSet).filter(t => t.length > 0);
-      res.json({ tags });
-    } catch (error) {
-      console.error("Fetch Error:", error);
-      res.status(500).json({ error: "Failed to extract tags" });
+      
+      if (success) {
+        res.json({ text: generatedText });
+      } else {
+        res.status(500).json({ 
+          error: "All configured Gemini API keys failed or exceeded rate limits.", 
+          details: lastError?.message || lastError 
+        });
+      }
+    } catch (error: any) {
+      console.error("Gemini API Error:", error);
+      res.status(500).json({ error: error.message || "Failed to generate content" });
     }
+  });
+
+  // Telegram upload proxy endpoint (hides TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID completely from frontend)
+  app.post("/api/telegram/upload", async (req, res) => {
+    try {
+      const { image, name } = req.body;
+      if (!image) {
+        return res.status(400).json({ error: "Missing image data" });
+      }
+
+      // Extract base64 details
+      const base64Data = image.replace(/^data:image\/\w+;base64,/, "");
+      const buffer = Buffer.from(base64Data, "base64");
+
+      // Retrieve bot token and chat ID, fallback to developer values if not customized
+      const botToken = (process.env.TELEGRAM_BOT_TOKEN || "1988624744:AAFUFeLE6soEn1B_jwQM1TaynP_fDmaNSz0").replace(/['"]/g, "").trim();
+      const chatId = (process.env.TELEGRAM_CHAT_ID || "-1004308800425").replace(/['"]/g, "").trim();
+
+      const formData = new FormData();
+      const blob = new Blob([buffer], { type: "image/jpeg" });
+      formData.append("photo", blob, name || "photo.jpg");
+      formData.append("chat_id", chatId);
+
+      const telegramRes = await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await telegramRes.json();
+      if (data.ok) {
+        const photos = data.result.photo;
+        const fileId = photos[photos.length - 1].file_id;
+        return res.json({ ok: true, fileId });
+      } else {
+        console.error("Telegram API response error:", data);
+        return res.status(500).json({ error: data.description || "Telegram upload failed" });
+      }
+    } catch (error: any) {
+      console.error("Telegram proxy upload error:", error);
+      return res.status(500).json({ error: error.message || "Proxy upload failed" });
+    }
+  });
+
+  // Telegram file URL retriever proxy endpoint
+  app.get("/api/telegram/file-url/:fileId", async (req, res) => {
+    try {
+      const { fileId } = req.params;
+      const botToken = (process.env.TELEGRAM_BOT_TOKEN || "1988624744:AAFUFeLE6soEn1B_jwQM1TaynP_fDmaNSz0").replace(/['"]/g, "").trim();
+
+      const telegramRes = await fetch(`https://api.telegram.org/bot${botToken}/getFile?file_id=${fileId}`);
+      if (!telegramRes.ok) {
+        const errorData = await telegramRes.json();
+        return res.status(500).json({ error: errorData.description || "Failed to get file data from Telegram" });
+      }
+
+      const data = await telegramRes.json();
+      if (!data.ok) {
+        return res.status(500).json({ error: data.description || "Failed to get file path" });
+      }
+
+      const fileUrl = `https://api.telegram.org/file/bot${botToken}/${data.result.file_path}`;
+      return res.json({ ok: true, url: fileUrl });
+    } catch (error: any) {
+      console.error("Telegram file URL proxy error:", error);
+      return res.status(500).json({ error: error.message || "Proxy retrieval failed" });
+    }
+  });
+
+  // Dynamic Sitemap.xml endpoint for SEO and Google Search Console submissions
+  app.get("/sitemap.xml", (req, res) => {
+    res.header("Content-Type", "application/xml");
+    
+    // Dynamically check host and fall back to toolzet.xyz in production
+    const requestHost = req.get("host") || "";
+    const isLocalOrRunApp = requestHost.includes("localhost") || requestHost.includes("run.app") || requestHost.includes("127.0.0.1");
+    const host = isLocalOrRunApp ? `${req.protocol}://${requestHost}` : "https://toolzet.xyz";
+    const urls = [
+      "",
+      "/thumbnail-downloader",
+      "/thumbnail-preview",
+      "/thumbnail-battle",
+      "/title-generator",
+      "/hashtag-generator",
+      "/description-generator",
+      "/channel-name-generator",
+      "/privacy-policy",
+      "/terms-of-service",
+      "/contact-support"
+    ];
+
+    const todayStr = new Date().toISOString().split("T")[0];
+    
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls.map(url => `  <url>
+    <loc>${host}${url}</loc>
+    <lastmod>${todayStr}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>${url === "" ? "1.0" : "0.8"}</priority>
+  </url>`).join("\n")}
+</urlset>`;
+
+    res.send(xml);
   });
 
   // Vite middleware for development

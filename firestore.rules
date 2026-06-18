@@ -26,6 +26,17 @@ service cloud.firestore {
       return isBaseValid && validUser;
     }
 
+    function isValidSupportTicket(data) {
+      return data.keys().hasAll(['name', 'email', 'subject', 'message', 'userId', 'createdAt', 'status'])
+        && data.name is string && data.name.size() <= 150
+        && data.email is string && data.email.size() <= 250
+        && data.subject is string && data.subject.size() <= 200
+        && data.message is string && data.message.size() <= 5000
+        && data.userId is string && data.userId.size() <= 128
+        && data.createdAt is string && data.createdAt.size() <= 50
+        && data.status is string && (data.status == 'open' || data.status == 'closed' || data.status == 'in-progress');
+    }
+
     match /battles/{battleId} {
       allow read: if true;
       
@@ -45,6 +56,15 @@ service cloud.firestore {
         && incoming().thumbB == existing().thumbB
         && incoming().createdAt == existing().createdAt
         && incoming().get('userId', '') == existing().get('userId', '');
+    }
+
+    match /support_tickets/{ticketId} {
+      allow read: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow create: if isValidSupportTicket(incoming())
+        && (
+          (request.auth != null && incoming().userId == request.auth.uid) ||
+          (request.auth == null && incoming().userId == 'guest')
+        );
     }
   }
 }

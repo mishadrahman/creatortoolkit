@@ -5,7 +5,7 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
-    base: '/creatortoolkit/',
+    base: process.env.GITHUB_PAGES === 'true' ? '/creatortoolkit/' : '/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {

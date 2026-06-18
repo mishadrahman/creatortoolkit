@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { uploadToTelegram } from "../lib/telegram";
 import { useAuth } from "../lib/AuthContext";
 import CropModal from "../components/CropModal";
+import SEO from "../components/SEO";
 import {
   FacebookShareButton,
   TwitterShareButton,
@@ -220,6 +221,11 @@ export default function ThumbnailBattle() {
 
   return (
     <div className="container mx-auto max-w-5xl px-4 py-12">
+      <SEO 
+        title="YouTube Thumbnail Battle | Creative A/B Tester"
+        description="Run real comparison match voting tests with alternative video covers. Collect authentic CTR insights, votes, and user feedback from real communities to elevate dynamic performance."
+        keywords="youtube thumbnail ab test, compare video overlays, thumbnail vote poll, click-through rate booster, community preference battle, test video cover, ctr ab tool, thumbnail optimizer polls"
+      />
       {cropTarget && (
         <CropModal 
           imageSrc={cropTarget.url} 

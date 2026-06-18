@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Download, Image as ImageIcon, Copy, Check } from "lucide-react";
 import { Button, Input, Card, CardContent } from "../components/ui";
+import SEO from "../components/SEO";
 
 export default function ThumbnailDownloader() {
   const [url, setUrl] = useState("");
@@ -61,12 +62,17 @@ export default function ThumbnailDownloader() {
 
   return (
     <div className="container mx-auto max-w-5xl px-4 py-12">
+      <SEO 
+        title="YT Thumbnail Downloader | Download HD Video Covers"
+        description="Instantly extract, view, and save maximum-resolution (1080p, HD, SD) cover art, banners, and preview files from any public YouTube video. Fast, safe, and free thumbnail grabber."
+        keywords="download youtube thumbnail, download yt thumbnail, full hd thumbnail downloader, extract cover art, high resolution thumbnail grabber, youtube thumbnail exporter, maxresdefault preview downloader, save youtube video covers"
+      />
       <div className="mb-12 text-center">
         <h1 className="text-3xl font-extrabold tracking-tight mb-4 text-gray-900 dark:text-white">
-          YouTube Thumbnail Downloader
+          YT Thumbnail Downloader
         </h1>
         <p className="text-gray-500 dark:text-gray-400">
-          Extract and download thumbnails in full HD right from any YouTube URL.
+          Extract and download thumbnails in full HD right from any YouTube video URL.
         </p>
       </div>
 

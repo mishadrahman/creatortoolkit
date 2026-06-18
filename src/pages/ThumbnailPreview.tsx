@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Upload, X } from "lucide-react";
 import { Button, Input, Card, CardContent } from "../components/ui";
+import SEO from "../components/SEO";
 
 export default function ThumbnailPreview() {
   const [image, setImage] = useState<string | null>(null);
@@ -14,6 +15,11 @@ export default function ThumbnailPreview() {
 
   return (
     <div className="container mx-auto max-w-6xl px-4 py-12">
+      <SEO 
+        title="YouTube Thumbnail Layout Previewer & Fit Tester"
+        description="Verify exactly how your thumbnail stands out on the Desktop home feed, Recommended Sidebar list, and Mobile portrait feeds before uploading to YouTube. Preview CTR potential."
+        keywords="youtube thumbnail preview, test thumbnail layouts, mobile thumbnail tester, youtube feed mockups, layout simulator for creators, thumbnail visual CTR test, overlay previews"
+      />
       <div className="mb-12 text-center">
         <h1 className="text-3xl font-extrabold tracking-tight mb-4 text-gray-900 dark:text-white">
           YouTube Thumbnail Preview

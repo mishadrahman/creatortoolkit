@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Sparkles, Copy, RefreshCw, Check } from "lucide-react";
 import { Button, Input, Textarea, Card, CardContent } from "../components/ui";
+import SEO from "../components/SEO";
 
 export default function DescriptionGenerator() {
   const [topic, setTopic] = useState("");
@@ -39,6 +40,11 @@ export default function DescriptionGenerator() {
 
   return (
     <div className="container mx-auto max-w-4xl px-4 py-12">
+      <SEO 
+        title="AI YouTube Description Generator | Copy SEO Outlines"
+        description="Write professional, SEO-optimized Descriptions in seconds. Pre-formatted with engaging video summaries, social call-to-actions, timestamps, and optimized keywords."
+        keywords="youtube description generator, automated video details optimizer, search description template, timeline marker scheduler, youtube seo description writer, copy channel social tags"
+      />
       <div className="mb-12 text-center">
         <h1 className="text-3xl font-extrabold tracking-tight mb-4 text-gray-900 dark:text-white">
           YouTube Description Generator

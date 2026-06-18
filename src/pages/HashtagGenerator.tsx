@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Sparkles, Copy, RefreshCw, Check } from "lucide-react";
 import { Button, Input, Card, CardContent } from "../components/ui";
+import SEO from "../components/SEO";
 
 export default function HashtagGenerator() {
   const [topic, setTopic] = useState("");
@@ -44,6 +45,11 @@ export default function HashtagGenerator() {
 
   return (
     <div className="container mx-auto max-w-4xl px-4 py-12">
+      <SEO 
+        title="AI YouTube Hashtag Generator | Viral SEO Tags Finder"
+        description="Discover trending and contextually-aware searchable tags. Leverage real-time AI to supplement your video's search visibility, optimize crawl classification, and rank higher in search indexes."
+        keywords="youtube tag generator, best hashtags for youtube, find youtube video keywords, search tags optimization, video classification tool, seo tag indexer, trending video hash keywords"
+      />
       <div className="mb-12 text-center">
         <h1 className="text-3xl font-extrabold tracking-tight mb-4 text-gray-900 dark:text-white">
           YouTube Hashtag Generator
