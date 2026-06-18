@@ -6,7 +6,17 @@
     <script type="text/javascript">
       // SPA GitHub Pages Redirection Hack
       // See https://github.com/rafgraph/spa-github-pages for licensing details
-      var pathSegmentsToKeep = 1; // Since repository is at /creatortoolkit/
+      
+      // Dynamically detect path segments to keep
+      // If hosted on GitHub pages subdirectory (e.g., username.github.io/creatortoolkit/), use 1 segment.
+      // If hosted on a custom apex domain (e.g. toolzet.xyz), there is no subdirectory, so keep 0 segments.
+      var pathSegmentsToKeep = 0;
+      if (window.location.hostname.indexOf('github.io') !== -1) {
+        var pathParts = window.location.pathname.split('/');
+        if (pathParts[1] && pathParts[1] !== 'index.html') {
+          pathSegmentsToKeep = 1;
+        }
+      }
 
       var l = window.location;
       l.replace(
