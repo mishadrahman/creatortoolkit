@@ -155,6 +155,31 @@ async function startServer() {
     }
   });
 
+  // Serves pre-rendered static HTML files with clean URLs (omitting .html extension)
+  app.get("/privacy-policy", (req, res) => {
+    const isProd = process.env.NODE_ENV === "production";
+    const file = isProd
+      ? path.join(process.cwd(), "dist", "privacy-policy.html")
+      : path.join(process.cwd(), "public", "privacy-policy.html");
+    res.sendFile(file);
+  });
+
+  app.get("/terms-of-service", (req, res) => {
+    const isProd = process.env.NODE_ENV === "production";
+    const file = isProd
+      ? path.join(process.cwd(), "dist", "terms-of-service.html")
+      : path.join(process.cwd(), "public", "terms-of-service.html");
+    res.sendFile(file);
+  });
+
+  app.get("/contact-support", (req, res) => {
+    const isProd = process.env.NODE_ENV === "production";
+    const file = isProd
+      ? path.join(process.cwd(), "dist", "contact-support.html")
+      : path.join(process.cwd(), "public", "contact-support.html");
+    res.sendFile(file);
+  });
+
   // Dynamic Sitemap.xml endpoint for SEO and Google Search Console submissions
   app.get("/sitemap.xml", (req, res) => {
     res.header("Content-Type", "application/xml");
