@@ -153,10 +153,8 @@ async function startServer() {
   app.get("/sitemap.xml", (req, res) => {
     res.header("Content-Type", "application/xml");
     
-    // Dynamically check host and fall back to toolzet.xyz in production
-    const requestHost = req.get("host") || "";
-    const isLocalOrRunApp = requestHost.includes("localhost") || requestHost.includes("run.app") || requestHost.includes("127.0.0.1");
-    const host = isLocalOrRunApp ? `${req.protocol}://${requestHost}` : "https://toolzet.xyz";
+    // Always use the primary user custom domain for production SEO and proper GSC indexing
+    const host = "https://toolzet.xyz";
     const urls = [
       "",
       "/thumbnail-downloader",
