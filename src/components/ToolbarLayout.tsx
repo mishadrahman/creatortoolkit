@@ -56,7 +56,7 @@ export default function ToolbarLayout() {
       <header className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/50 backdrop-blur">
         <div className="container mx-auto flex py-4 items-center px-4 md:px-8 justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center font-bold text-white shadow-lg shadow-red-600/20">T</div>
+            <img src="https://i.ibb.co.com/N2VPgTpm/file-0000000054407209a4f9585660c0b08f.webp" alt="Toolzet Logo" className="w-8 h-8 rounded-lg object-cover shadow-lg shadow-red-600/10" referrerPolicy="no-referrer" />
             <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Tool<span className="text-red-600 dark:text-red-500">zet</span></span>
           </Link>
 
@@ -203,14 +203,14 @@ export default function ToolbarLayout() {
       <footer className="border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/80 px-4 md:px-8 py-6 flex flex-col md:flex-row items-center justify-between text-[11px] text-slate-500 w-full mt-auto">
         <div className="flex flex-col gap-2 mb-4 md:mb-0">
           <div className="flex gap-4 md:gap-6 justify-center md:justify-start">
-            <a href="/privacy-policy" target="_blank" rel="noopener noreferrer" className="hover:text-slate-900 dark:hover:text-slate-300 transition-colors whitespace-nowrap">Privacy Policy</a>
+            <a href="/privacy-policy" className="hover:text-slate-900 dark:hover:text-slate-300 transition-colors whitespace-nowrap">Privacy Policy</a>
             <span className="text-slate-300 dark:text-slate-800 hidden md:inline">•</span>
-            <a href="/terms-of-service" target="_blank" rel="noopener noreferrer" className="hover:text-slate-900 dark:hover:text-slate-300 transition-colors whitespace-nowrap">Terms of Service</a>
+            <a href="/terms-of-service" className="hover:text-slate-900 dark:hover:text-slate-300 transition-colors whitespace-nowrap">Terms of Service</a>
           </div>
           <div className="flex gap-4 md:gap-6 justify-center md:justify-start">
             <a href="/sitemap.xml" target="_blank" rel="noopener noreferrer" className="hover:text-slate-900 dark:hover:text-slate-300 transition-colors whitespace-nowrap">Sitemap.xml</a>
             <span className="text-slate-300 dark:text-slate-800 hidden md:inline">•</span>
-            <a href="/contact-support" target="_blank" rel="noopener noreferrer" className="hover:text-slate-900 dark:hover:text-slate-300 transition-colors whitespace-nowrap">Contact Support</a>
+            <a href="/contact-support" className="hover:text-slate-900 dark:hover:text-slate-300 transition-colors whitespace-nowrap">Contact Support</a>
           </div>
         </div>
         <div className="flex flex-col md:flex-row items-center gap-4 hidden md:flex">
