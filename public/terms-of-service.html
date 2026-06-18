@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Terms of Service | Toolzet</title>
+    <meta name="description" content="Review the acceptable usage policies, guidelines, and terms governing your access to the free tools suite on Toolzet." />
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            }
+          }
+        }
+      }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script>
+      // Sync initial theme
+      (function() {
+        const theme = localStorage.getItem('theme');
+        if (theme === 'dark') {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      })();
+    </script>
+  </head>
+  <body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-red-500/10 selection:text-red-500">
+    
+    <!-- Navbar Header -->
+    <header class="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/50 backdrop-blur animate-fade-in">
+      <div class="max-w-7xl mx-auto flex py-4 items-center px-4 md:px-8 justify-between relative">
+        <a href="/" class="flex items-center gap-2">
+          <div class="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center font-bold text-white shadow-lg shadow-red-600/20">T</div>
+          <span class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Tool<span class="text-red-600 dark:text-red-500">zet</span></span>
+        </a>
+
+        <!-- Desktop Nav -->
+        <nav class="hidden md:flex gap-6 text-sm font-medium text-slate-600 dark:text-slate-400 absolute left-1/2 -translate-x-1/2">
+          <a href="/" class="transition-colors hover:text-slate-900 dark:hover:text-white">Home</a>
+          <a href="/thumbnail-downloader" class="transition-colors hover:text-slate-900 dark:hover:text-white">Thumbnails</a>
+          <a href="/title-generator" class="transition-colors hover:text-slate-900 dark:hover:text-white">Titles</a>
+          <a href="/hashtag-generator" class="transition-colors hover:text-slate-900 dark:hover:text-white">Hashtags</a>
+          <a href="/description-generator" class="transition-colors hover:text-slate-900 dark:hover:text-white">Descriptions</a>
+          <a href="/channel-name-generator" class="transition-colors hover:text-slate-900 dark:hover:text-white">Names</a>
+        </nav>
+
+        <div class="flex items-center gap-4">
+          <!-- Theme Toggle Button -->
+          <button id="theme-btn" class="p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all focus:outline-none cursor-pointer" aria-label="Toggle Theme">
+            <!-- Moon Icon (shows in light theme) -->
+            <svg id="theme-icon-moon" class="h-5 w-5 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+            <!-- Sun Icon (shows in dark theme) -->
+            <svg id="theme-icon-sun" class="h-5 w-5 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+            </svg>
+          </button>
+
+          <!-- Mobile Menu Toggle -->
+          <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all focus:outline-none cursor-pointer" aria-label="Toggle Menu">
+            <svg id="hamburger-icon" class="h-5 w-5 block" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <svg id="close-icon" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Dropdown Menu -->
+      <div id="mobile-menu" class="hidden md:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 py-3 px-4 space-y-2">
+        <a href="/" class="block px-3 py-2 rounded-lg text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white">Home</a>
+        <a href="/thumbnail-downloader" class="block px-3 py-2 rounded-lg text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white">Thumbnails</a>
+        <a href="/title-generator" class="block px-3 py-2 rounded-lg text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white">Titles</a>
+        <a href="/hashtag-generator" class="block px-3 py-2 rounded-lg text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white">Hashtags</a>
+        <a href="/description-generator" class="block px-3 py-2 rounded-lg text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white">Descriptions</a>
+        <a href="/channel-name-generator" class="block px-3 py-2 rounded-lg text-sm font-medium hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white">Names</a>
+      </div>
+    </header>
+
+    <script>
+      (function() {
+        const themeBtn = document.getElementById('theme-btn');
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const hamburgerIcon = document.getElementById('hamburger-icon');
+        const closeIcon = document.getElementById('close-icon');
+
+        if (themeBtn) {
+          themeBtn.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+          });
+        }
+
+        if (mobileMenuBtn && mobileMenu) {
+          mobileMenuBtn.addEventListener('click', () => {
+            const isOpen = mobileMenu.classList.toggle('hidden');
+            if (!isOpen) {
+              hamburgerIcon.classList.add('hidden');
+              closeIcon.classList.remove('hidden');
+            } else {
+              hamburgerIcon.classList.remove('hidden');
+              closeIcon.classList.add('hidden');
+            }
+          });
+        }
+      })();
+    </script>
+
+    <!-- Main Content Container Container -->
+    <main class="flex-1 max-w-4xl mx-auto px-4 sm:px-6 py-12 md:py-16 w-full">
+      <!-- FileText Header Logo & Title -->
+      <div class="text-center mb-12 animate-fade-in">
+        <div class="inline-flex p-3.5 rounded-2xl bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 mb-5 shadow-sm">
+          <svg class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </div>
+        <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-slate-955 dark:text-white mb-3">
+          Terms of Service
+        </h1>
+        <p class="text-slate-500 dark:text-slate-400 max-w-lg mx-auto text-sm leading-relaxed">
+          Please review the guidelines around accessing and operating the tools provided by Toolzet.
+        </p>
+        <p class="text-xs text-slate-450 dark:text-slate-500 mt-2.5">
+          Effective Date: June 17, 2026
+        </p>
+      </div>
+
+      <!-- Content cards list -->
+      <div class="space-y-8">
+        
+        <!-- Section 1 -->
+        <div class="p-6 md:p-8 rounded-2xl border border-slate-200/80 dark:border-slate-900 bg-white dark:bg-slate-900/40 shadow-sm space-y-4">
+          <div class="flex items-center gap-3 mb-2">
+            <svg class="h-5 w-5 text-red-600 dark:text-red-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+            </svg>
+            <h2 class="text-lg font-bold text-slate-955 dark:text-white">1. Agreement to Terms</h2>
+          </div>
+          <p class="text-sm text-slate-650 dark:text-slate-405 leading-relaxed">
+            By visiting or registering with Toolzet, you signify your full agreement and conformity to these Terms of Service. If you do not accept these terms under any constraints, please terminate your usage of this platform immediately.
+          </p>
+          <p class="text-sm text-slate-650 dark:text-slate-405 leading-relaxed">
+            We reserve the absolute right to revise, update, or alter any portion of these Terms of Service from time to time. Your continued utilization of our resources serves as complete acceptance of any new terms in place.
+          </p>
+        </div>
+
+        <!-- Section 2 -->
+        <div class="p-6 md:p-8 rounded-2xl border border-slate-200/80 dark:border-slate-900 bg-white dark:bg-slate-900/40 shadow-sm space-y-4">
+          <div class="flex items-center gap-3 mb-2">
+            <svg class="h-5 w-5 text-red-600 dark:text-red-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M11 4a2 2 0 114 0v8a4 4 0 01-8 0V5a3 3 0 016 0" />
+            </svg>
+            <h2 class="text-lg font-bold text-slate-955 dark:text-white">2. Acceptable Use Policy</h2>
+          </div>
+          <p class="text-sm text-slate-650 dark:text-slate-405 leading-relaxed">
+            Toolzet provides free utilities including Title Generator, Hashtag Generator, Description Optimizer, and Thumbnail Downloader. When using these utilities:
+          </p>
+          <ul class="list-disc pl-5 text-sm text-slate-650 dark:text-slate-405 space-y-2.5">
+            <li>
+              <strong>No Abuse/Automation:</strong> You are strictly forbidden from abusing our API routes, employing automated bots, spiders, indexing scraper scripts, or submitting excessive volumes of parallel requests.
+            </li>
+            <li>
+              <strong>Respect Creators:</strong> When downloading channel assets, respect copyrights. Creators retain ownership of video assets and media thumbnails. Only operate within the bounds of standard fair use.
+            </li>
+            <li>
+              <strong>No Inappropriate Input:</strong> You must not enter harassing, abusive, illegal, or toxic prompts description queries.
+            </li>
+          </ul>
+        </div>
+
+        <!-- Section 3 -->
+        <div class="p-6 md:p-8 rounded-2xl border border-slate-200/80 dark:border-slate-900 bg-white dark:bg-slate-900/40 shadow-sm space-y-4">
+          <div class="flex items-center gap-3 mb-2">
+            <svg class="h-5 w-5 text-red-600 dark:text-red-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <h2 class="text-lg font-bold text-slate-955 dark:text-white">3. Disclaimer of Warranties</h2>
+          </div>
+          <p class="text-sm text-slate-650 dark:text-slate-405 leading-relaxed">
+            Toolzet is provided entirely on an <strong>"AS IS"</strong> and <strong>"AS AVAILABLE"</strong> basis. We do not warranty that our optimization services, dynamic AI generators, or thumbnail processors will be free of interruptions, errors, blockages, or service modifications.
+          </p>
+          <p class="text-sm text-slate-650 dark:text-slate-405 leading-relaxed">
+            Under no scenario shall we be liable for any revenue losses, audience drops, or algorithmic impact of generated metadata on your platforms. Content suggestions are merely ideas and should be reviewed according to your niche standards.
+          </p>
+        </div>
+
+        <!-- Section 4 Contact text -->
+        <div class="text-center text-xs text-slate-400 dark:text-slate-500 pt-4">
+          For any query concerning these terms, please contact our helpline via our <a href="/contact-support.html" target="_blank" rel="noopener noreferrer" class="text-red-600 dark:text-red-500 font-medium hover:underline">Contact Support</a> page.
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950 px-4 md:px-8 py-6 flex flex-col md:flex-row items-center justify-between text-[11px] text-slate-500 w-full mt-auto">
+      <div class="flex flex-col gap-2 mb-4 md:mb-0">
+        <div class="flex gap-4 md:gap-6 justify-center md:justify-start">
+          <a href="/privacy-policy.html" target="_blank" rel="noopener noreferrer" class="hover:text-slate-900 dark:hover:text-slate-300 transition-colors whitespace-nowrap">Privacy Policy</a>
+          <span class="text-slate-300 dark:text-slate-800 hidden md:inline">•</span>
+          <a href="/terms-of-service.html" target="_blank" rel="noopener noreferrer" class="hover:text-slate-900 dark:hover:text-slate-300 transition-colors whitespace-nowrap">Terms of Service</a>
+        </div>
+        <div class="flex gap-4 md:gap-6 justify-center md:justify-start">
+          <a href="/sitemap.xml" target="_blank" rel="noopener noreferrer" class="hover:text-slate-900 dark:hover:text-slate-300 transition-colors whitespace-nowrap">Sitemap.xml</a>
+          <span class="text-slate-300 dark:text-slate-800 hidden md:inline">•</span>
+          <a href="/contact-support.html" target="_blank" rel="noopener noreferrer" class="hover:text-slate-900 dark:hover:text-slate-300 transition-colors whitespace-nowrap">Contact Support</a>
+        </div>
+      </div>
+      <div class="flex flex-col md:flex-row items-center gap-4 hidden md:flex">
+        <div class="flex -space-x-2">
+          <div class="w-5 h-5 rounded-full border border-white dark:border-slate-950 bg-slate-200 dark:bg-slate-700"></div>
+          <div class="w-5 h-5 rounded-full border border-white dark:border-slate-950 bg-slate-300 dark:bg-slate-600"></div>
+          <div class="w-5 h-5 rounded-full border border-white dark:border-slate-950 bg-slate-400 dark:bg-slate-500"></div>
+        </div>
+        <span>Trusted by 12,000+ Creators</span>
+      </div>
+      <div class="mt-4 md:mt-0">© 2026 Toolzet. Built for Success.</div>
+    </footer>
+
+  </body>
+</html>

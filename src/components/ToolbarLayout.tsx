@@ -203,14 +203,14 @@ export default function ToolbarLayout() {
       <footer className="border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/80 px-4 md:px-8 py-6 flex flex-col md:flex-row items-center justify-between text-[11px] text-slate-500 w-full mt-auto">
         <div className="flex flex-col gap-2 mb-4 md:mb-0">
           <div className="flex gap-4 md:gap-6 justify-center md:justify-start">
-            <Link to="/privacy-policy" className="hover:text-slate-900 dark:hover:text-slate-300 transition-colors whitespace-nowrap">Privacy Policy</Link>
+            <a href="/privacy-policy.html" target="_blank" rel="noopener noreferrer" className="hover:text-slate-900 dark:hover:text-slate-300 transition-colors whitespace-nowrap">Privacy Policy</a>
             <span className="text-slate-300 dark:text-slate-800 hidden md:inline">•</span>
-            <Link to="/terms-of-service" className="hover:text-slate-900 dark:hover:text-slate-300 transition-colors whitespace-nowrap">Terms of Service</Link>
+            <a href="/terms-of-service.html" target="_blank" rel="noopener noreferrer" className="hover:text-slate-900 dark:hover:text-slate-300 transition-colors whitespace-nowrap">Terms of Service</a>
           </div>
           <div className="flex gap-4 md:gap-6 justify-center md:justify-start">
             <a href="/sitemap.xml" target="_blank" rel="noopener noreferrer" className="hover:text-slate-900 dark:hover:text-slate-300 transition-colors whitespace-nowrap">Sitemap.xml</a>
             <span className="text-slate-300 dark:text-slate-800 hidden md:inline">•</span>
-            <Link to="/contact-support" className="hover:text-slate-900 dark:hover:text-slate-300 transition-colors whitespace-nowrap">Contact Support</Link>
+            <a href="/contact-support.html" target="_blank" rel="noopener noreferrer" className="hover:text-slate-900 dark:hover:text-slate-300 transition-colors whitespace-nowrap">Contact Support</a>
           </div>
         </div>
         <div className="flex flex-col md:flex-row items-center gap-4 hidden md:flex">

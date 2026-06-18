@@ -6,11 +6,9 @@ import { Button } from "../components/ui";
 import { getTelegramFileUrl } from "../lib/telegram";
 import { useAuth } from "../lib/AuthContext";
 import {
-  FacebookShareButton,
   TwitterShareButton,
   WhatsappShareButton,
   TelegramShareButton,
-  FacebookMessengerShareButton,
   FacebookIcon,
   TwitterIcon,
   WhatsappIcon,
@@ -28,8 +26,27 @@ export default function BattleView() {
   const [urlB, setUrlB] = useState<string | null>(null);
   const [isCreator, setIsCreator] = useState(false);
 
-  const shareUrl = window.location.href;
+  const shareUrl = `https://toolzet.xyz/battle/${id}`;
   const shareTitle = battle?.title || "Which thumbnail is better? Vote now!";
+
+  const handleFacebookShare = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const fbShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`;
+    window.open(fbShareUrl, "_blank", "width=600,height=500,noopener,noreferrer");
+  };
+
+  const handleMessengerShare = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const isMobile = /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
+    
+    if (isMobile) {
+      window.location.href = `fb-messenger://share/?link=${encodeURIComponent(shareUrl)}`;
+    } else {
+      const app_id = "291494419107518"; // Public App ID fallback for desktop messenger
+      const mShareUrl = `https://www.facebook.com/dialog/send?link=${encodeURIComponent(shareUrl)}&app_id=${app_id}&redirect_uri=${encodeURIComponent(shareUrl)}`;
+      window.open(mShareUrl, "_blank", "width=600,height=500,noopener,noreferrer");
+    }
+  };
 
   useEffect(() => {
     // Check local storage for previous vote
@@ -223,12 +240,12 @@ export default function BattleView() {
       <div className="mt-16 text-center max-w-xl mx-auto space-y-6 border-t border-gray-200 dark:border-gray-800 pt-8">
          <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-500 shadow-sm inline-block">Share this Battle</h3>
          <div className="flex flex-wrap items-center justify-center gap-4 py-4">
-           <FacebookShareButton url={shareUrl} title={shareTitle}>
+           <button onClick={handleFacebookShare} className="hover:opacity-85 active:scale-95 transition-all focus:outline-none cursor-pointer" aria-label="Share on Facebook">
              <FacebookIcon size={48} round />
-           </FacebookShareButton>
-           <FacebookMessengerShareButton url={shareUrl} appId="">
+           </button>
+           <button onClick={handleMessengerShare} className="hover:opacity-85 active:scale-95 transition-all focus:outline-none cursor-pointer" aria-label="Share on Messenger">
              <FacebookMessengerIcon size={48} round />
-           </FacebookMessengerShareButton>
+           </button>
            <WhatsappShareButton url={shareUrl} title={shareTitle} separator=":: ">
              <WhatsappIcon size={48} round />
            </WhatsappShareButton>
