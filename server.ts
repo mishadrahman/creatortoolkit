@@ -88,7 +88,7 @@ async function startServer() {
     try {
       const { image, name } = req.body;
       if (!image) {
-        return res.status(400).json({ error: "Missing image data" });
+        return res.status(400).json({ ok: false, error: "Missing image data" });
       }
 
       // Extract base64 details
@@ -99,11 +99,16 @@ async function startServer() {
       const botToken = (process.env.TELEGRAM_BOT_TOKEN || "1988624744:AAFUFeLE6soEn1B_jwQM1TaynP_fDmaNSz0").replace(/['"]/g, "").trim();
       const chatId = (process.env.TELEGRAM_CHAT_ID || "-1004308800425").replace(/['"]/g, "").trim();
 
+      // In Node.js environment, using the global File class ensures correct multi-part content-type serialization
+      const fileName = name || "photo.jpg";
+      const file = new File([buffer], fileName, { type: "image/jpeg" });
+
       const formData = new FormData();
-      const blob = new Blob([buffer], { type: "image/jpeg" });
-      formData.append("photo", blob, name || "photo.jpg");
+      formData.append("photo", file);
       formData.append("chat_id", chatId);
 
+      console.log(`Sending image upload request to Telegram API (Chat: ${chatId})...`);
+      
       const telegramRes = await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
         method: "POST",
         body: formData,
@@ -113,14 +118,15 @@ async function startServer() {
       if (data.ok) {
         const photos = data.result.photo;
         const fileId = photos[photos.length - 1].file_id;
+        console.log("Telegram upload success. File ID:", fileId);
         return res.json({ ok: true, fileId });
       } else {
         console.error("Telegram API response error:", data);
-        return res.status(500).json({ error: data.description || "Telegram upload failed" });
+        return res.status(500).json({ ok: false, error: data.description || "Telegram upload failed" });
       }
     } catch (error: any) {
       console.error("Telegram proxy upload error:", error);
-      return res.status(500).json({ error: error.message || "Proxy upload failed" });
+      return res.status(500).json({ ok: false, error: error.message || "Proxy upload failed" });
     }
   });
 
@@ -133,19 +139,19 @@ async function startServer() {
       const telegramRes = await fetch(`https://api.telegram.org/bot${botToken}/getFile?file_id=${fileId}`);
       if (!telegramRes.ok) {
         const errorData = await telegramRes.json();
-        return res.status(500).json({ error: errorData.description || "Failed to get file data from Telegram" });
+        return res.status(500).json({ ok: false, error: errorData.description || "Failed to get file data from Telegram" });
       }
 
       const data = await telegramRes.json();
       if (!data.ok) {
-        return res.status(500).json({ error: data.description || "Failed to get file path" });
+        return res.status(500).json({ ok: false, error: data.description || "Failed to get file path" });
       }
 
       const fileUrl = `https://api.telegram.org/file/bot${botToken}/${data.result.file_path}`;
       return res.json({ ok: true, url: fileUrl });
     } catch (error: any) {
       console.error("Telegram file URL proxy error:", error);
-      return res.status(500).json({ error: error.message || "Proxy retrieval failed" });
+      return res.status(500).json({ ok: false, error: error.message || "Proxy retrieval failed" });
     }
   });
 
