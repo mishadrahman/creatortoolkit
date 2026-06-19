@@ -18,7 +18,7 @@ export default function DescriptionGenerator() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           prompt: `Write a comprehensive, SEO-optimized YouTube video description for a video about: "${topic}". Include an engaging introduction, a section for timestamps (leave the times as 00:00 placeholders), a call to action to subscribe, social media links placeholders, and 5-10 relevant hashtags at the bottom.`,
-          systemInstruction: "You are an expert YouTube growth hacker. Write directly without generic AI intros.",
+          systemInstruction: "You are an elite global YouTube growth hacker. All generated descriptions and text MUST be strictly in English only. Do NOT use or generate any other language such as Bengali, under any circumstances. Write directly without generic AI intros.",
         }),
       });
       const data = await res.json();

@@ -18,7 +18,7 @@ export default function HashtagGenerator() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           prompt: `Generate 20 relevant, highly searched YouTube hashtags for a video about: "${topic}". Return only the hashtags separated by spaces,.`,
-          systemInstruction: "You are a professional YouTube SEO expert.",
+          systemInstruction: "You are a professional global YouTube SEO expert. All generated hashtags and words MUST be strictly in English only. Do NOT use or generate any other language such as Bengali, under any circumstances.",
         }),
       });
       const data = await res.json();

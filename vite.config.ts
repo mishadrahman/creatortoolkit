@@ -32,6 +32,9 @@ export default defineConfig(() => {
               if (id.includes('react-image-crop')) {
                 return 'vendor-crop';
               }
+              if (id.includes('react-share')) {
+                return 'vendor-share';
+              }
               if (id.includes('react-router-dom') || id.includes('react-router')) {
                 return 'vendor-router';
               }

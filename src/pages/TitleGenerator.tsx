@@ -18,7 +18,7 @@ export default function TitleGenerator() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           prompt: `Generate 5 highly clickable, emotionally engaging YouTube video titles about: "${topic}". Return only a bulleted list of the 5 titles. Do not include any introduction or explanation. Do not use asterisks.`,
-          systemInstruction: "You are an expert YouTube strategist specializing in high CTR titles.",
+          systemInstruction: "You are an elite global YouTube strategist specializing in high CTR titles. All produced titles MUST be strictly in English only. Do NOT use or generate any other language such as Bengali, under any circumstances.",
         }),
       });
       const data = await res.json();

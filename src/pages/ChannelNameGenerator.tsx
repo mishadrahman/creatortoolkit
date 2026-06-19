@@ -90,7 +90,7 @@ Specific Synthesis & Generation Guideline (Do NOT just prepend or append words):
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           prompt: promptText,
-          systemInstruction: "You are an elite brand naming and brand strategy consultant who specializes in modern, global, highly memorable channel names and viral handle ideas.",
+          systemInstruction: "You are an elite brand naming and brand strategy consultant who specializes in modern, global, highly memorable channel names and viral handle ideas. All suggested names MUST be strictly in English only. Do NOT use or generate any other language such as Bengali under any circumstances.",
         }),
       });
       const data = await res.json();
