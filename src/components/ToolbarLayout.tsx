@@ -80,15 +80,16 @@ export default function ToolbarLayout() {
               <input
                 type="search"
                 placeholder="Search tools..."
+                aria-label="Search tools"
                 className="w-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-full py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all text-slate-900 dark:text-slate-200 placeholder:text-slate-500"
               />
             </div>
             
-            <Button variant="ghost" size="icon" onClick={toggleTheme} className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
+            <Button variant="ghost" size="icon" onClick={toggleTheme} className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white" aria-label="Toggle Theme">
               {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </Button>
             
-            <Button variant="ghost" size="icon" className="md:hidden text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+            <Button variant="ghost" size="icon" className="md:hidden text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white" onClick={() => setMobileMenuOpen(!mobileMenuOpen)} aria-label="Toggle Mobile Menu">
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
             
@@ -185,17 +186,17 @@ export default function ToolbarLayout() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/80 px-4 md:px-8 py-6 flex flex-col md:flex-row items-center justify-between text-[11px] text-slate-500 w-full mt-auto">
+      <footer className="border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/80 px-4 md:px-8 py-6 flex flex-col md:flex-row items-center justify-between text-xs text-slate-600 dark:text-slate-400 w-full mt-auto">
         <div className="flex flex-col gap-2 mb-4 md:mb-0">
           <div className="flex gap-4 md:gap-6 justify-center md:justify-start">
-            <a href="/privacy-policy" className="hover:text-slate-900 dark:hover:text-slate-300 transition-colors whitespace-nowrap">Privacy Policy</a>
+            <a href="/privacy-policy" className="text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-500 transition-colors whitespace-nowrap">Privacy Policy</a>
             <span className="text-slate-300 dark:text-slate-800 hidden md:inline">•</span>
-            <a href="/terms-of-service" className="hover:text-slate-900 dark:hover:text-slate-300 transition-colors whitespace-nowrap">Terms of Service</a>
+            <a href="/terms-of-service" className="text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-500 transition-colors whitespace-nowrap">Terms of Service</a>
           </div>
           <div className="flex gap-4 md:gap-6 justify-center md:justify-start">
-            <a href="/sitemap.xml" target="_blank" rel="noopener noreferrer" className="hover:text-slate-900 dark:hover:text-slate-300 transition-colors whitespace-nowrap">Sitemap.xml</a>
+            <a href="/sitemap.xml" target="_blank" rel="noopener noreferrer" className="text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-500 transition-colors whitespace-nowrap">Sitemap.xml</a>
             <span className="text-slate-300 dark:text-slate-800 hidden md:inline">•</span>
-            <a href="/contact-support" className="hover:text-slate-900 dark:hover:text-slate-300 transition-colors whitespace-nowrap">Contact Support</a>
+            <a href="/contact-support" className="text-slate-600 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-500 transition-colors whitespace-nowrap">Contact Support</a>
           </div>
         </div>
         <div className="flex flex-col md:flex-row items-center gap-4 hidden md:flex">

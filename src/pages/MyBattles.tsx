@@ -4,6 +4,7 @@ import { db } from "../lib/firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { BarChart, LogIn, ArrowRight, Share2, Check } from "lucide-react";
 import { Button, Card, CardContent } from "../components/ui";
+import SEO from "../components/SEO";
 
 export default function MyBattles() {
   const { user, signIn, loading: authLoading } = useAuth();
@@ -91,6 +92,11 @@ export default function MyBattles() {
 
   return (
     <div className="container mx-auto max-w-5xl px-4 py-12">
+      <SEO 
+        title="My Battles" 
+        description="View and track your active and past thumbnail A/B testing battles to optimize your click-through rate (CTR)." 
+        keywords="thumbnail battle history, thumbnail CTR comparison, A/B test results, Toolzet history"
+      />
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-extrabold tracking-tight mb-2 text-gray-900 dark:text-white">

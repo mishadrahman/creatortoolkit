@@ -6,6 +6,7 @@ import { Button } from "../components/ui";
 import { getTelegramFileUrl } from "../lib/telegram";
 import { useAuth } from "../lib/AuthContext";
 import FAQSection from "../components/FAQSection";
+import SEO from "../components/SEO";
 import {
   TwitterShareButton,
   WhatsappShareButton,
@@ -223,6 +224,11 @@ export default function BattleView() {
 
   return (
     <div className="container mx-auto max-w-5xl px-4 py-12 md:py-24">
+      <SEO 
+        title={battle.title ? `Vote: ${battle.title}` : "Thumbnail Battle Voting"}
+        description={`Cast your vote on the battle: "${battle.title || 'Which thumbnail is better?'}" and help select the highest performing YouTube CTR thumbnail layout.`}
+        keywords="youtube CTR test, thumbnail comparison, vote thumbnail, thumbnail battle, Toolzet test"
+      />
       <div className="mb-12 text-center">
         <h1 className="text-3xl font-extrabold tracking-tight mb-4 text-gray-900 dark:text-white">
           {battle.title || "Which thumbnail is better?"}

@@ -16,6 +16,7 @@ import TitleGenerator from "./pages/TitleGenerator";
 import HashtagGenerator from "./pages/HashtagGenerator";
 import DescriptionGenerator from "./pages/DescriptionGenerator";
 import ChannelNameGenerator from "./pages/ChannelNameGenerator";
+import NotFound from "./pages/NotFound";
 
 export default function App() {
   return (
@@ -33,6 +34,7 @@ export default function App() {
             <Route path="hashtag-generator" element={<HashtagGenerator />} />
             <Route path="description-generator" element={<DescriptionGenerator />} />
             <Route path="channel-name-generator" element={<ChannelNameGenerator />} />
+            <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
       </BrowserRouter>

@@ -274,10 +274,20 @@ ${urls.map(url => `  <url>
     });
     app.use(vite.middlewares);
   } else {
-    const distPath = path.join(process.cwd(), "dist", "client");
-    // we need to fix this as our build scripts emit directly to dist, wait, vite outputs to dist by default. Let me check the build script.
-    // Actually Vite outputs to dist. I'll use dist.
-    app.use(express.static(path.join(process.cwd(), "dist")));
+    // Serve static files with production optimized Cache-Control headers
+    // Highly hashed assets inside dist/assets are cached immutably to raise PageSpeed performance score
+    app.use(express.static(path.join(process.cwd(), "dist"), {
+      maxAge: "1d",
+      setHeaders: (res, filePath) => {
+        if (filePath.endsWith(".html")) {
+          res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        } else if (filePath.includes("/assets/") || filePath.includes("\\assets\\")) {
+          res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+        } else {
+          res.setHeader("Cache-Control", "public, max-age=86400");
+        }
+      }
+    }));
     app.get("*", (req, res) => { // Using '*' for express 4 is fine
       res.sendFile(path.join(process.cwd(), "dist", "index.html"));
     });
