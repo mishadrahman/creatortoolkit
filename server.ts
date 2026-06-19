@@ -233,7 +233,7 @@ async function startServer() {
 
   // Dynamic Sitemap.xml endpoint for SEO and Google Search Console submissions
   app.get("/sitemap.xml", (req, res) => {
-    res.header("Content-Type", "application/xml");
+    res.header("Content-Type", "application/xml; charset=utf-8");
     
     // Always use the primary user custom domain for production SEO and proper GSC indexing
     const host = "https://toolzet.xyz";
@@ -256,7 +256,7 @@ async function startServer() {
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map(url => `  <url>
-    <loc>${host}${url}</loc>
+    <loc>${host}${url === "" ? "/" : url}</loc>
     <lastmod>${todayStr}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>${url === "" ? "1.0" : "0.8"}</priority>
