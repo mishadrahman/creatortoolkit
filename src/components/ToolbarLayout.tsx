@@ -55,7 +55,7 @@ export default function ToolbarLayout() {
       <header className="fixed top-0 left-0 right-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/50 backdrop-blur">
         <div className="container mx-auto flex py-4 items-center px-4 md:px-8 justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <img src="https://i.ibb.co.com/N2VPgTpm/file-0000000054407209a4f9585660c0b08f.webp" alt="Toolzet Logo" className="w-8 h-8 rounded-lg object-cover shadow-lg shadow-red-600/10" width="32" height="32" referrerPolicy="no-referrer" />
+            <img src="https://i.ibb.co.com/F4XzwCsC/file-0000000054407209a4f9585660c0b08f.avif" alt="Toolzet Logo" className="w-8 h-8 rounded-lg object-cover shadow-lg shadow-red-600/10" width="32" height="32" referrerPolicy="no-referrer" />
             <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Tool<span className="text-red-600 dark:text-red-500">zet</span></span>
           </Link>
 

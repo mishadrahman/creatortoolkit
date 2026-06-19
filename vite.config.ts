@@ -16,6 +16,8 @@ export default defineConfig(() => {
       cssCodeSplit: true,
       chunkSizeWarningLimit: 1200,
       reportCompressedSize: false,
+      target: 'esnext',
+      minify: 'esbuild',
       rollupOptions: {
         output: {
           manualChunks(id) {
@@ -43,6 +45,10 @@ export default defineConfig(() => {
           }
         }
       }
+    },
+    esbuild: {
+      drop: ['console', 'debugger'],
+      legalComments: 'none',
     },
     server: {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
