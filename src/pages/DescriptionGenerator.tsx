@@ -2,6 +2,26 @@ import React, { useState } from "react";
 import { Sparkles, Copy, RefreshCw, Check } from "lucide-react";
 import { Button, Input, Textarea, Card, CardContent } from "../components/ui";
 import SEO from "../components/SEO";
+import FAQSection from "../components/FAQSection";
+
+const DESCRIPTION_FAQS = [
+  {
+    question: "What is a professional YouTube description and why is it vital?",
+    answer: "A professional description creates an immediate understanding of your video's contents for search engine crawls (SEO) and real users. Writing a clear description containing relevant keyword phrasing greatly boosts click rates and viewer engagement."
+  },
+  {
+    question: "How long should my video descriptions be?",
+    answer: "YouTube allows up to 5,000 characters. To maximize search engine indexing and mobile readability, keep key context, timestamps, call-to-actions, and main links in the first 1,500 characters, while placing secondary links and general templates below that."
+  },
+  {
+    question: "How do video timestamps or chapters benefit mobile optimization?",
+    answer: "Timestamps (written in the 00:00 style) let YouTube segment and map your video. Google Search can index these portions, showing clickable chapters directly on Google Search results pages as 'Key Moments', which drives substantial organic mobile traffic."
+  },
+  {
+    question: "Can I use external links and social links in my description safely?",
+    answer: "Yes, you should insert call-to-actions pointing to affiliate links, landing pages, or other playlists. Keep those links brief (using short URLs) and place them higher in the description to encourage viewers to click before scrolling too far."
+  }
+];
 
 export default function DescriptionGenerator() {
   const [topic, setTopic] = useState("");
@@ -90,6 +110,9 @@ export default function DescriptionGenerator() {
           </CardContent>
         </Card>
       )}
+
+      {/* FAQ Section */}
+      <FAQSection faqs={DESCRIPTION_FAQS} />
     </div>
   );
 }

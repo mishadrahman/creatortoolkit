@@ -2,6 +2,26 @@ import React, { useState } from "react";
 import { Sparkles, Copy, RefreshCw, Check } from "lucide-react";
 import { Button, Input, Card, CardContent } from "../components/ui";
 import SEO from "../components/SEO";
+import FAQSection from "../components/FAQSection";
+
+const HASHTAG_FAQS = [
+  {
+    question: "Why are hashtags important for YouTube SEO?",
+    answer: "Hashtags make your videos discoverable by categorizing them into broad search collections. They help YouTube's algorithm understand your content cluster, index your videos accurately, and display them under specific hashtag landing pages and user recommendation lists."
+  },
+  {
+    question: "How many hashtags should I include in my YouTube videos?",
+    answer: "While YouTube allows up to 60 hashtags per video, Google recommends using between 3 to 15 highly relevant hashtags in your video description. Over-stuffing hashtags is considered spammy and may lead to YouTube ignoring all of them or reducing your search visibility."
+  },
+  {
+    question: "Where do my hashtags display on YouTube?",
+    answer: "On mobile and desktop browsers, the first three hashtags of your description will automatically display above your video's title or inside the initial description container. This prime visibility drives direct user clicks on specific keywords."
+  },
+  {
+    question: "Should my hashtags have punctuation or spaces?",
+    answer: "No. Commas, periods, or spaces will break a hashtag on social platform algorithms. Our AI generator automatically strip spaces and punctuation, combining multiple-word phrases into clean, easy-to-read hashtags (e.g. #GamingGear)."
+  }
+];
 
 export default function HashtagGenerator() {
   const [topic, setTopic] = useState("");
@@ -97,6 +117,9 @@ export default function HashtagGenerator() {
           </CardContent>
         </Card>
       )}
+
+      {/* FAQ Section */}
+      <FAQSection faqs={HASHTAG_FAQS} />
     </div>
   );
 }

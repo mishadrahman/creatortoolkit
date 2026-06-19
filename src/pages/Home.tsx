@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { ArrowRight, Image as ImageIcon, Sparkles, Hash, AlignLeft, Type, Tags, LayoutList, CheckCircle2, ChevronRight } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui";
 import SEO from "../components/SEO";
@@ -163,10 +162,10 @@ export default function Home() {
           ))}
         </div>
 
-        {/* Grid of Tools */}
+         {/* Grid of Tools */}
         <section className="grid grid-cols-1 md:grid-cols-12 auto-rows-min gap-5 max-w-6xl mx-auto mb-16 lg:grid-flow-row-dense">
           {filteredTools.map((tool) => (
-            <Link key={tool.name} to={tool.href} className={`group cursor-pointer ${tool.span}`}>
+            <a key={tool.name} href={tool.href} className={`group cursor-pointer ${tool.span}`}>
               <Card className={`h-full transition-all duration-300 border border-slate-200 dark:border-slate-800 rounded-2xl relative overflow-hidden group ${tool.borderColor} ${tool.glow}`}>
                 {tool.name === "Thumbnail Battle" && (
                   <div className="absolute top-5 right-5 pointer-events-none">
@@ -204,7 +203,7 @@ export default function Home() {
                   </div>
                 </CardHeader>
               </Card>
-            </Link>
+            </a>
           ))}
         </section>
         

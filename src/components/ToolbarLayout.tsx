@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { Search, Youtube, Menu, Settings, X, LogIn, LogOut, Activity, Sun, Moon } from "lucide-react";
 import { Button } from "./ui";
 import { useAuth } from "../lib/AuthContext";
@@ -54,23 +54,23 @@ export default function ToolbarLayout() {
       {/* Navbar */}
       <header className="fixed top-0 left-0 right-0 z-50 w-full h-[73px] border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/50 backdrop-blur">
         <div className="container mx-auto flex h-full items-center px-4 md:px-8 justify-between">
-          <Link to="/" className="flex items-center gap-2">
+          <a href="/" className="flex items-center gap-2">
             <img src="https://i.ibb.co.com/F4XzwCsC/file-0000000054407209a4f9585660c0b08f.avif" alt="Toolzet Logo" className="w-8 h-8 rounded-lg object-cover shadow-lg shadow-red-600/10" width="32" height="32" referrerPolicy="no-referrer" loading="eager" decoding="sync" fetchPriority="high" />
             <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Tool<span className="text-red-600 dark:text-red-500">zet</span></span>
-          </Link>
+          </a>
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex gap-6 text-sm font-medium text-slate-600 dark:text-slate-400 absolute left-1/2 -translate-x-1/2">
             {navLinks.map((link) => (
-              <Link
+              <a
                 key={link.name}
-                to={link.href}
+                href={link.href}
                 className={`transition-colors hover:text-slate-900 dark:hover:text-white ${
                   location.pathname === link.href ? "text-slate-900 dark:text-white border-b-2 border-slate-900 dark:border-white" : ""
                 }`}
               >
                 {link.name}
-              </Link>
+              </a>
             ))}
           </nav>
 
@@ -94,12 +94,12 @@ export default function ToolbarLayout() {
             
             {user ? (
               <div className="hidden md:flex items-center gap-4">
-                <Link to="/my-battles">
+                <a href="/my-battles">
                   <Button variant="ghost" size="sm" className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
                     <Activity className="h-4 w-4 mr-2" />
                     My Battles
                   </Button>
-                </Link>
+                </a>
                 <div className="relative">
                   <div 
                     className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 shrink-0 overflow-hidden cursor-pointer hover:border-slate-300 dark:hover:border-slate-500 transition-colors"
@@ -147,18 +147,18 @@ export default function ToolbarLayout() {
             <div className="py-4">
               <nav className="flex flex-col gap-4 text-sm font-medium text-slate-600 dark:text-slate-400">
                 {navLinks.map((link) => (
-                  <Link
+                  <a
                     key={link.name}
-                    to={link.href}
+                    href={link.href}
                     className={location.pathname === link.href ? "text-slate-900 dark:text-white" : "hover:text-slate-900 dark:hover:text-white"}
                   >
                     {link.name}
-                  </Link>
+                  </a>
                 ))}
                 {user && (
-                  <Link to="/my-battles" className={location.pathname === "/my-battles" ? "text-slate-900 dark:text-white" : "hover:text-slate-900 dark:hover:text-white"}>
+                  <a href="/my-battles" className={location.pathname === "/my-battles" ? "text-slate-900 dark:text-white" : "hover:text-slate-900 dark:hover:text-white"}>
                     My Battles
-                  </Link>
+                  </a>
                 )}
               </nav>
               <div className="pt-4 border-t border-slate-200 dark:border-slate-800 mt-4">

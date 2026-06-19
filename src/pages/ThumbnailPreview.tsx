@@ -2,6 +2,26 @@ import React, { useState } from "react";
 import { Upload, X } from "lucide-react";
 import { Button, Input, Card, CardContent } from "../components/ui";
 import SEO from "../components/SEO";
+import FAQSection from "../components/FAQSection";
+
+const PREVIEW_FAQS = [
+  {
+    question: "What is a YouTube Thumbnail Preview / Simulator tool?",
+    answer: "It is an interactive mockup application allowing creators to upload their custom thumbnail designs and preview exactly how they appear alongside real-world video titles on YouTube's interface (including Desktop feed grids, Recommended search sidebars, and Mobile grids) before uploading to YouTube."
+  },
+  {
+    question: "Why should I test my thumbnails on a mobile emulator?",
+    answer: "Over 70% of YouTube views originate on mobile devices where screens are very small. A thumbnail that looks extremely clean on a huge desktop monitor might have unreadable text, blurry details, or poor contrast on standard mobile grids, leading to low CTR."
+  },
+  {
+    question: "How do I prevent the video duration timestamp from burying my text?",
+    answer: "YouTube overlays a solid dark rectangular timestamp (such as '12:34') on the bottom-right corner of all thumbnails. You should strictly avoid placing critical faces, text, logo stamps, or visual peaks in the bottom-right area of your 16:9 canvas."
+  },
+  {
+    question: "How can I improve thumbnail text readability on small displays?",
+    answer: "Use bright, high-contrast, thick sans-serif fonts (like Impact, Bebas Neue, or Montserrat Bold). Limit your text to 3 or 4 action words, use strong drop shadows or custom dark backgrounds, and keep elements well-scaled so they can be read in under 0.5 seconds of scrolling."
+  }
+];
 
 export default function ThumbnailPreview() {
   const [image, setImage] = useState<string | null>(null);
@@ -107,6 +127,9 @@ export default function ThumbnailPreview() {
           </div>
         </div>
       )}
+
+      {/* FAQ Section */}
+      <FAQSection faqs={PREVIEW_FAQS} />
     </div>
   );
 }

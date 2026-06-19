@@ -2,6 +2,26 @@ import React, { useState, useEffect } from "react";
 import { Sparkles, Copy, RefreshCw, Check, Star, Trash2, Heart, Type, Smile, FolderOpen, AlertCircle, HelpCircle, X } from "lucide-react";
 import { Button, Input, Card, CardContent, Label } from "../components/ui";
 import SEO from "../components/SEO";
+import FAQSection from "../components/FAQSection";
+
+const CHANNEL_FAQS = [
+  {
+    question: "How does the AI YouTube Channel Name Generator work?",
+    answer: "Our generator uses advanced Gemini AI to blend your specific category, selected tone style, and custom seed words. It goes beyond simple prefix/suffix combinations to perform linguistic/syllabic wordplays, emotional styling, and unique brandable word associations that are optimized for high memorability and global appeal."
+  },
+  {
+    question: "Should my YouTube channel name be my real name or a brand name?",
+    answer: "Using your personal name is excellent for vlogging, coaching, or lifestyle consulting where you are the primary product. Choosing a unique brandable or descriptive channel name (e.g., Techora, VibeSprout) is highly recommended for tech tutorials, multi-host setups, gaming, and any media brands where you plan to build a team or sell the digital asset in the future."
+  },
+  {
+    question: "What makes a YouTube channel name SEO-friendly and searchable?",
+    answer: "An SEO-friendly channel name is unique, easy to spell, and simple to pronounce on mobile. It should incorporate or strongly hint at your content niche (so crawlers can map your topic immediately) and must not clash with existing large channels or pre-existing registered trademarks, allowing you to dominate page-one search results."
+  },
+  {
+    question: "Can I safely change my channel name and handle later?",
+    answer: "Yes, YouTube permits easy customization of your channel name and handle. However, doing so frequently can temporarily confuse your search indexing, disrupt your subscriber community, and trigger a brief, minor fluctuation in YouTube and Google search rankings, so choosing a core scalable identity from day one is optimal."
+  }
+];
 
 const CATEGORIES = [
   { id: "tech", label: "Tech & Gadgets", emoji: "💻" },
@@ -461,6 +481,9 @@ Specific Synthesis & Generation Guideline (Do NOT just prepend or append words):
           )}
 
         </div>
+
+        {/* FAQ Section */}
+        <FAQSection faqs={CHANNEL_FAQS} />
       </div>
     </div>
   );

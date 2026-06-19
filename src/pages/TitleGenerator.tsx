@@ -2,6 +2,26 @@ import React, { useState } from "react";
 import { Sparkles, Copy, RefreshCw, Check } from "lucide-react";
 import { Button, Input, Card, CardContent } from "../components/ui";
 import SEO from "../components/SEO";
+import FAQSection from "../components/FAQSection";
+
+const TITLE_FAQS = [
+  {
+    question: "What makes a YouTube video title click-worthy (High CTR)?",
+    answer: "A high-CTR title balances emotional triggers (curiosity, fear-of-missing-out, sudden discovery) with clear value propositions. It avoids direct clickbait (which can decrease your watch-time retention) and instead frames the video as the clear solution to a specific topic or mystery."
+  },
+  {
+    question: "How long should my YouTube titles be?",
+    answer: "The ideal length is between 50 to 60 characters. YouTube allows up to 100 characters, but anything longer than 60 characters gets truncated (cut off) with '...' in mobile feed lists, hiding your critical call-to-action or punchy keywords."
+  },
+  {
+    question: "Should I place my main search keywords at the beginning or end of my title?",
+    answer: "Always prioritize placing your core search phrase near the beginning of your title. This ensures that users scrolling quickly on mobile devices instantly recognize the topic, and it signals high contextual relevance to Google and YouTube crawlers."
+  },
+  {
+    question: "How do capital letters and numbers affect title rankings?",
+    answer: "Using numbers (e.g., '5 Secret Steps', '2026 Guide') and selective, single-word capitalization (e.g., 'EASY', 'NEVER') breaks layout monotony and increases raw CTR on busy feeds. Avoid over-capitalizing entire titles, as it reduces readability and looks like spam."
+  }
+];
 
 export default function TitleGenerator() {
   const [topic, setTopic] = useState("");
@@ -96,6 +116,9 @@ export default function TitleGenerator() {
           ))}
         </div>
       )}
+
+      {/* FAQ Section */}
+      <FAQSection faqs={TITLE_FAQS} />
     </div>
   );
 }

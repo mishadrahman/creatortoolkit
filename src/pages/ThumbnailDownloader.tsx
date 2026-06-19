@@ -2,6 +2,26 @@ import React, { useState } from "react";
 import { Download, Image as ImageIcon, Copy, Check } from "lucide-react";
 import { Button, Input, Card, CardContent } from "../components/ui";
 import SEO from "../components/SEO";
+import FAQSection from "../components/FAQSection";
+
+const DOWNLOADER_FAQS = [
+  {
+    question: "How do I download a YouTube thumbnail on my mobile device?",
+    answer: "Simply copy your target YouTube video's link from the YouTube App, paste it in the input field above, and click 'Load Thumbnail'. Choose your preferred quality, e.g., High-Definition (1280x720) or standard, and click the 'Download' button to instantly save the JPEG image to your mobile photo gallery or downloads directory."
+  },
+  {
+    question: "Is it safe and legal to use other creators' thumbnails?",
+    answer: "Downloading thumbnails is perfectly legal for reference, local backup, performance analysis, or personal study. However, using another creator's exact copyrighted imagery or face as your own video thumbnail on YouTube violates intellectual property rules and may lead to manual visual community safety claims or low click rates."
+  },
+  {
+    question: "What is the standard size and aspect ratio for a YouTube thumbnail?",
+    answer: "The absolute standard size mandated by YouTube is 1280x720 pixels (width of 1280px and height of 720px), representing a perfect 16:9 widescreen aspect ratio. Images must be saved as JPEG, PNG, or GIF formats under 2MB in file size to render flawlessly on mobile, tablet, and widescreen TV setups."
+  },
+  {
+    question: "Why some thumbnails do not load in Ultra-HD (1080p/720p)?",
+    answer: "When a creator uploads a thumbnail with a resolution lower than 1280x720, YouTube does not generate a High-Definition version ('maxresdefault.jpg'). In such cases, our tool will gracefully fall back, indicating 'not available in this resolution', while letting you safely download the next highest resolution (e.g., standard definition or HQ)."
+  }
+];
 
 export default function ThumbnailDownloader() {
   const [url, setUrl] = useState("");
@@ -132,6 +152,9 @@ export default function ThumbnailDownloader() {
           })}
         </div>
       )}
+
+      {/* FAQ Section */}
+      <FAQSection faqs={DOWNLOADER_FAQS} />
     </div>
   );
 }
