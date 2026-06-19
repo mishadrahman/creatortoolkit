@@ -10,14 +10,17 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     
-    <!-- Render-blocking CSS optimization: load Google Fonts asynchronously -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght=400;500;600;700;800&display=swap" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <!-- Render-blocking CSS optimization: load Google Fonts asynchronously with correct syntax -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
     <noscript>
-      <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;500;600;700;800&display=swap" rel="stylesheet" />
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     </noscript>
     
     <link rel="preconnect" href="https://i.ibb.co.com" crossorigin />
+    <!-- Preload critical images to eliminate LCP delay and layout shift -->
+    <link rel="preload" href="https://i.ibb.co.com/F4XzwCsC/file-0000000054407209a4f9585660c0b08f.avif" as="image" type="image/avif" crossorigin />
+    <link rel="preload" href="https://i.ibb.co.com/rR9kK34n/favicon.jpg" as="image" type="image/jpeg" crossorigin />
     <link rel="icon" type="image/jpeg" href="https://i.ibb.co.com/rR9kK34n/favicon.jpg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Toolzet</title>
