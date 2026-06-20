@@ -1,10 +1,14 @@
 import express from "express";
 import path from "path";
+import fs from "fs";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 
 dotenv.config();
+
+const distExists = fs.existsSync(path.join(process.cwd(), "dist", "index.html"));
+const isProd = process.env.NODE_ENV === "production" || distExists;
 
 // Helper to get all configured API keys (comma-separated or single)
 function getApiKeys(): string[] {
@@ -208,7 +212,6 @@ async function startServer() {
 
   // Serves pre-rendered static HTML files with clean URLs (omitting .html extension)
   app.get("/privacy-policy", (req, res) => {
-    const isProd = process.env.NODE_ENV === "production";
     const file = isProd
       ? path.join(process.cwd(), "dist", "privacy-policy.html")
       : path.join(process.cwd(), "public", "privacy-policy.html");
@@ -216,7 +219,6 @@ async function startServer() {
   });
 
   app.get("/terms-of-service", (req, res) => {
-    const isProd = process.env.NODE_ENV === "production";
     const file = isProd
       ? path.join(process.cwd(), "dist", "terms-of-service.html")
       : path.join(process.cwd(), "public", "terms-of-service.html");
@@ -224,7 +226,6 @@ async function startServer() {
   });
 
   app.get("/contact-support", (req, res) => {
-    const isProd = process.env.NODE_ENV === "production";
     const file = isProd
       ? path.join(process.cwd(), "dist", "contact-support.html")
       : path.join(process.cwd(), "public", "contact-support.html");
@@ -267,7 +268,7 @@ ${urls.map(url => `  <url>
   });
 
   // Vite middleware for development
-  if (process.env.NODE_ENV !== "production") {
+  if (!isProd) {
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",
