@@ -47,7 +47,7 @@ export default function BattleView() {
   const [urlB, setUrlB] = useState<string | null>(null);
   const [isCreator, setIsCreator] = useState(false);
 
-  const shareUrl = `https://toolzet.xyz/battle/${id}`;
+  const shareUrl = `${window.location.origin}/battle/${id}`;
   const shareTitle = battle?.title || "Which thumbnail is better? Vote now!";
 
   const handleFacebookShare = (e: React.MouseEvent) => {

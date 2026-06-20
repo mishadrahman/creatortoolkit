@@ -232,12 +232,33 @@ async function startServer() {
     res.sendFile(file);
   });
 
+  // Dynamic Robots.txt endpoint
+  app.get("/robots.txt", (req, res) => {
+    res.header("Content-Type", "text/plain; charset=utf-8");
+    const reqHost = req.get("host") || "";
+    let host = "https://toolzet.xyz";
+    if (reqHost.includes("localhost") || reqHost.includes("127.0.0.1") || reqHost.includes("run.app") || reqHost.includes("local")) {
+      const protocol = req.headers["x-forwarded-proto"] || req.protocol || "https";
+      host = `${protocol}://${reqHost}`;
+    }
+    res.send(`User-agent: *
+Allow: /
+
+Sitemap: ${host}/sitemap.xml
+`);
+  });
+
   // Dynamic Sitemap.xml endpoint for SEO and Google Search Console submissions
   app.get("/sitemap.xml", (req, res) => {
     res.header("Content-Type", "application/xml; charset=utf-8");
     
-    // Always use the primary user custom domain for production SEO and proper GSC indexing
-    const host = "https://toolzet.xyz";
+    const reqHost = req.get("host") || "";
+    let host = "https://toolzet.xyz";
+    if (reqHost.includes("localhost") || reqHost.includes("127.0.0.1") || reqHost.includes("run.app") || reqHost.includes("local")) {
+      const protocol = req.headers["x-forwarded-proto"] || req.protocol || "https";
+      host = `${protocol}://${reqHost}`;
+    }
+
     const urls = [
       "",
       "/thumbnail-downloader",
