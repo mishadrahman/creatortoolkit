@@ -274,6 +274,25 @@ ${urls.map(url => `  <url>
       appType: "spa",
     });
     app.use(vite.middlewares);
+    
+    // SPA Fallback for Development Mode:
+    // Any request that doesn't match an API or static file will serve index.html transformed by Vite.
+    app.get("*", async (req, res, next) => {
+      try {
+        const url = req.originalUrl;
+        const htmlPath = path.join(process.cwd(), "index.html");
+        if (fs.existsSync(htmlPath)) {
+          let html = fs.readFileSync(htmlPath, "utf-8");
+          html = await vite.transformIndexHtml(url, html);
+          res.status(200).set({ "Content-Type": "text/html" }).send(html);
+        } else {
+          res.status(404).send("index.html not found");
+        }
+      } catch (e) {
+        vite.ssrFixStacktrace(e as Error);
+        next(e);
+      }
+    });
   } else {
     // Serve static files with production optimized Cache-Control headers
     // Highly hashed assets inside dist/assets are cached immutably to raise PageSpeed performance score
