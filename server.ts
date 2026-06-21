@@ -283,7 +283,7 @@ ${urls.map(url => `  <url>
     <changefreq>weekly</changefreq>
     <priority>${url === "" ? "1.0" : "0.8"}</priority>
   </url>`).join("\n")}
-</urlset>`;
+</urlset>`.trim();
 
     res.send(xml);
   });
