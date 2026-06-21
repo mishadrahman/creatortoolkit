@@ -80,7 +80,7 @@ export default function NotFound() {
             to="/thumbnail-downloader" 
             className="p-3 text-xs font-medium rounded-xl border border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/30 text-slate-700 dark:text-slate-300 hover:border-red-500/30 hover:text-red-600 dark:hover:text-red-500 transition-all"
           >
-            Thumbnail Downloader
+            Video Cover Grabber
           </Link>
         </div>
       </div>

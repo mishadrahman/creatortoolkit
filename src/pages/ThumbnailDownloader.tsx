@@ -6,20 +6,20 @@ import FAQSection from "../components/FAQSection";
 
 const DOWNLOADER_FAQS = [
   {
-    question: "How do I download a YouTube thumbnail on my mobile device?",
-    answer: "Simply copy your target YouTube video's link from the YouTube App, paste it in the input field above, and click 'Load Thumbnail'. Choose your preferred quality, e.g., High-Definition (1280x720) or standard, and click the 'Download' button to instantly save the JPEG image to your mobile photo gallery or downloads directory."
+    question: "How do I save a high-res video cover art on my mobile device?",
+    answer: "Simply copy your target video's address link, paste it in the container above, and standard resolutions will load instantly. Choose your optimum quality preference—e.g., Ultra-High-Definition or high standard—and click the save button to store the JPEG image directly into your browser download files or image gallery."
   },
   {
-    question: "Is it safe and legal to use other creators' thumbnails?",
-    answer: "Downloading thumbnails is perfectly legal for reference, local backup, performance analysis, or personal study. However, using another creator's exact copyrighted imagery or face as your own video thumbnail on YouTube violates intellectual property rules and may lead to manual visual community safety claims or low click rates."
+    question: "Is it safe and legal to preview others' streaming visual covers?",
+    answer: "Extracting cover layout designs is legal and helpful for educational analyses, structural research, and planning CTR (Click-Through Rate) alignments. Using similar general structures for layouts handles well, but you should always verify content copyrights on intellectual property if you plan on full replication."
   },
   {
-    question: "What is the standard size and aspect ratio for a YouTube thumbnail?",
-    answer: "The absolute standard size mandated by YouTube is 1280x720 pixels (width of 1280px and height of 720px), representing a perfect 16:9 widescreen aspect ratio. Images must be saved as JPEG, PNG, or GIF formats under 2MB in file size to render flawlessly on mobile, tablet, and widescreen TV setups."
+    question: "What is the standard configuration and aspect ratio for wide media covers?",
+    answer: "Most popular video sites specify 1280x720 pixels (width of 1280px and height of 720px), representing a perfect widescreen 16:9 ratio. Saving images in high-contrast formats like JPEG or PNG below 2 megabytes yields crisp loading performance for viewers."
   },
   {
-    question: "Why some thumbnails do not load in Ultra-HD (1080p/720p)?",
-    answer: "When a creator uploads a thumbnail with a resolution lower than 1280x720, YouTube does not generate a High-Definition version ('maxresdefault.jpg'). In such cases, our tool will gracefully fall back, indicating 'not available in this resolution', while letting you safely download the next highest resolution (e.g., standard definition or HQ)."
+    question: "Why do some links fall back to standard resolutions instead of max-resolution?",
+    answer: "If the content creator uploaded a cover image at a lower baseline pixel size, the server platform won't render a high-definition ('maxres') option. If that happens, our previewer automatically checks the next best available options (like High Quality or Standard definition) so you can still view and check them easily."
   }
 ];
 
@@ -83,16 +83,16 @@ export default function ThumbnailDownloader() {
   return (
     <div className="container mx-auto max-w-5xl px-4 py-12">
       <SEO 
-        title="YT Thumbnail Downloader | Download HD Video Covers"
-        description="Instantly extract, view, and save maximum-resolution (1080p, HD, SD) cover art, banners, and preview files from any public YouTube video. Fast, safe, and free thumbnail grabber."
-        keywords="download youtube thumbnail, download yt thumbnail, full hd thumbnail downloader, extract cover art, high resolution thumbnail grabber, youtube thumbnail exporter, maxresdefault preview downloader, save youtube video covers"
+        title="HD Video Cover Grabber & Thumbnail Previewer"
+        description="Instantly extract, view, and organize maximum-definition cover art, banners, and preview images from high-quality streams. Clean, fast, and free web asset previewer."
+        keywords="video cover grabber, high def thumbnail viewer, page artwork extractor, save streaming previews, hd post banner exporter, media asset downloader, stream coverage preview, link artwork search"
       />
       <div className="mb-12 text-center">
         <h1 className="text-3xl font-extrabold tracking-tight mb-4 text-gray-900 dark:text-white">
-          YT Thumbnail Downloader
+          HD Video Cover Grabber
         </h1>
         <p className="text-gray-500 dark:text-gray-400">
-          Extract and download thumbnails in full HD right from any YouTube video URL.
+          Extract and view gorgeous preview covers in high-definition from any public clip or stream link.
         </p>
       </div>
 
@@ -102,7 +102,7 @@ export default function ThumbnailDownloader() {
             <Input
               value={url}
               onChange={handleUrlChange}
-              placeholder="Paste YouTube Video URL (e.g. https://www.youtube.com/watch?v=...)"
+              placeholder="Paste public video URL here..."
               className="text-base h-12"
             />
           </div>

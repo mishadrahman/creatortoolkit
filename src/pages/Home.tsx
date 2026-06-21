@@ -27,10 +27,10 @@ const tools = [
     highlight: true,
   },
   {
-    name: "Thumbnail Downloader",
+    name: "Video Cover Grabber",
     category: "design",
     categoryLabel: "Asset Grabber",
-    purpose: "Instantly extract and download the high-definition cover art from any existing public YouTube video.",
+    purpose: "Instantly extract and view high-definition cover art from any existing public stream or video URL.",
     icon: ImageIcon,
     href: "/thumbnail-downloader",
     color: "text-blue-600 dark:text-blue-400",
